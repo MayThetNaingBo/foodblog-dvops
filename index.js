@@ -9,6 +9,9 @@ app.use(express.static("./public"));
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/public/" + startPage);
 });
+const { addBlogPost } = require("./utils/FoodblogUtil");
+app.post("/add-blogpost", addBlogPost);
+
 server = app.listen(PORT, function () {
     const address = server.address();
     const baseUrl = `http://${
