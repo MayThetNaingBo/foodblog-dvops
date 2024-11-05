@@ -17,7 +17,7 @@
         <div class="container mt-5">
             <!-- Logo -->
             <div class="row justify-content-center">
-                <img src="images/logo.png" alt="Logo" class="img-fluid" />
+                <img src="images/logo.jpg" alt="Logo" class="img-fluid" />
             </div>
 
             <!-- Blog Posts Grid -->
@@ -173,40 +173,43 @@
 
         <script>
             // Function to add a new blog post to the grid
+            // Adjust addBlogPost function to use data attributes and event listeners
             function addBlogPost() {
                 const title = document.getElementById("title").value;
                 const author = document.getElementById("author").value;
                 const content = document.getElementById("content").value;
                 const imageUrl = document.getElementById("image-url").value;
-        
-                const postCard = `
-                    <div class="col-md-3 mb-4">
-                        <div class="card h-100" style="cursor: pointer;" onclick="viewBlogPost('${title}', '${author}', '${content}', '${imageUrl}')">
-                            <img src="${imageUrl}" class="card-img-top" alt="${title}">
-                            <div class="card-body">
-                                <h5 class="card-title">${title}</h5>
-                                <p class="card-text">${content.slice(0, 50)}...</p>
-                                <small class="text-muted">Author: ${author}</small>
-                            </div>
-                        </div>
-                    </div>
-                `;
-        
-                document.getElementById("blog-posts-container").insertAdjacentHTML("beforeend", postCard);
+
+                const postCard = document.createElement("div");
+                postCard.className = "col-md-3 mb-4";
+                postCard.innerHTML = `
+        <div class="card h-100" style="cursor: pointer;">
+            <img src="${imageUrl}" class="card-img-top" alt="${title}">
+            <div class="card-body">
+                <h5 class="card-title">${title}</h5>
+                <p class="card-text">${content.slice(0, 50)}...</p>
+                <small class="text-muted">Author: ${author}</small>
+            </div>
+        </div>
+    `;
+                postCard.addEventListener("click", function () {
+                    viewBlogPost(title, author, content, imageUrl);
+                });
+
+                document
+                    .getElementById("blog-posts-container")
+                    .appendChild(postCard);
                 document.getElementById("blogPostForm").reset();
                 $("#blogPostModal").modal("hide");
             }
-        
-            // Function to view blog post details in a modal
             function viewBlogPost(title, author, content, imageUrl) {
+                console.log("Blog post clicked:", title); // Debugging line
                 document.getElementById("viewTitle").innerText = title;
                 document.getElementById("viewAuthor").innerText = author;
                 document.getElementById("viewContent").innerText = content;
                 document.getElementById("viewImageUrl").src = imageUrl;
-        
-                $('#viewBlogPostModal').modal('show'); // Show the modal with the blog details
+                $("#viewBlogPostModal").modal("show");
             }
         </script>
-        
     </body>
 </html>
