@@ -1,0 +1,29 @@
+.card {
+    height: 350px;
+    overflow: hidden;
+}
+
+.card-img-top {
+    height: 150px;
+    object-fit: cover;
+}
+
+.card-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.modal-body {
+    max-height: 400px; /* Set max height as per your layout */
+    overflow-y: auto;
+}
+.custom-yellow {
+    background-color: #ffc107; /* Customize the yellow shade */
+    color: #000; /* Text color */
+    border-color: #ffc107;
+}
+
+.custom-yellow:hover {
+    background-color: #e0a800; /* Darker shade on hover */
+    border-color: #e0a800;
+}

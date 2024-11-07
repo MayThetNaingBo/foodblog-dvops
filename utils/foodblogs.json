@@ -1,0 +1,18 @@
+[
+    {
+        "restaurantName": "K Land",
+        "location": "Singapore",
+        "visitDate": "2024-10-10",
+        "rating": 5,
+        "content": "Amazing korean food with fresh ingredients!",
+        "imageUrl": "images/Kimchi.jpg"
+    },
+    {
+        "restaurantName": "Burmese House",
+        "location": "City Hall",
+        "visitDate": "2024-11-01",
+        "rating": 4,
+        "content": "Delicious burmese food, fresh and tasty.",
+        "imageUrl": "images/Mohingha.jpg"
+    }
+]
