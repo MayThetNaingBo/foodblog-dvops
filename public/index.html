@@ -11,10 +11,14 @@
             href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
             rel="stylesheet"
         />
+        <script src="js/foodblog.js"></script>
         <link rel="stylesheet" href="css/styles.css" />
     </head>
     <body>
         <div class="container mt-5">
+            <!-- Message Display Area -->
+            <div id="message" class="text-center mt-3"></div>
+
             <!-- Logo -->
             <div class="row justify-content-center">
                 <img src="images/logo.jpg" alt="Logo" class="img-fluid" />
@@ -182,118 +186,5 @@
                 </div>
             </div>
         </div>
-
-        <script>
-            // Function to load initial data from JSON file
-            // Function to load initial data from the server
-            function loadInitialData() {
-                fetch("/get-feedback")
-                    .then((response) => response.json())
-                    .then((data) => {
-                        data.forEach((feedback) => {
-                            displayFeedback(feedback);
-                        });
-                    })
-                    .catch((error) => {
-                        console.error("Error loading feedback data:", error);
-                    });
-            }
-
-            // Call `loadInitialData` when the page loads
-            document.addEventListener("DOMContentLoaded", loadInitialData);
-
-            // Function to display a single feedback entry
-            function displayFeedback({
-                restaurantName,
-                location,
-                visitDate,
-                rating,
-                content,
-                imageUrl,
-            }) {
-                const feedbackCard = document.createElement("div");
-                feedbackCard.className = "col-md-4 mb-4";
-                feedbackCard.innerHTML = `
-                    <div class="card h-100" style="cursor: pointer;">
-                        <img src="${imageUrl}" class="card-img-top" alt="${restaurantName}">
-                        <div class="card-body">
-                            <h5 class="card-title">${restaurantName}</h5>
-                            <p class="card-text">${content.slice(0, 50)}...</p>
-                            <small class="text-muted">Location: ${location} | Rating: ${rating} Stars</small>
-                        </div>
-                    </div>
-                `;
-                feedbackCard.addEventListener("click", function () {
-                    viewFeedback(
-                        restaurantName,
-                        location,
-                        visitDate,
-                        rating,
-                        content,
-                        imageUrl
-                    );
-                });
-                document
-                    .getElementById("blog-posts-container")
-                    .appendChild(feedbackCard);
-            }
-
-            // Function to view the details of a feedback entry
-            function viewFeedback(
-                restaurantName,
-                location,
-                visitDate,
-                rating,
-                content,
-                imageUrl
-            ) {
-                document.getElementById("viewRestaurantName").innerText =
-                    restaurantName;
-                document.getElementById("viewLocation").innerText = location;
-                document.getElementById("viewVisitDate").innerText = visitDate;
-                document.getElementById("viewRating").innerText = rating;
-                document.getElementById("viewContent").innerText = content;
-                document.getElementById("viewImageUrl").src = imageUrl;
-                $("#viewBlogPostModal").modal("show");
-            }
-
-            // Add feedback manually through the form
-            function addFeedback() {
-                const restaurantName =
-                    document.getElementById("restaurantName").value;
-                const location = document.getElementById("location").value;
-                const visitDate = document.getElementById("visitDate").value;
-                const rating = document.getElementById("rating").value;
-                const content = document.getElementById("content").value;
-                const imageFile = document.getElementById("imageFile").files[0];
-
-                if (!restaurantName || !location || !visitDate || !content) {
-                    alert("Please fill in all required fields.");
-                    return;
-                }
-
-                const imageUrl = imageFile
-                    ? URL.createObjectURL(imageFile)
-                    : "images/default.jpg";
-                const newFeedback = {
-                    restaurantName,
-                    location,
-                    visitDate,
-                    rating,
-                    content,
-                    imageUrl,
-                };
-
-                // Display the new feedback
-                displayFeedback(newFeedback);
-
-                // Reset the form and close the modal
-                document.getElementById("blogPostForm").reset();
-                $("#blogPostModal").modal("hide");
-            }
-
-            // Load initial data when the page loads
-            document.addEventListener("DOMContentLoaded", loadInitialData);
-        </script>
     </body>
 </html>
