@@ -1,17 +1,28 @@
-function addBlogPost() {
+function addFeedback() {
     var response = "";
-    var jsonData = {};
-    jsonData.title = document.getElementById("title").value;
-    jsonData.content = document.getElementById("content").value;
-    jsonData.author = document.getElementById("author").value;
-    jsonData.imageUrl = document.getElementById("imageUrl").value;
+    var formData = new FormData();
+
+    // Collect input data
+    formData.append(
+        "restaurantName",
+        document.getElementById("restaurantName").value
+    );
+    formData.append("location", document.getElementById("location").value);
+    formData.append("visitDate", document.getElementById("visitDate").value);
+    formData.append("rating", document.getElementById("rating").value);
+    formData.append("feedback", document.getElementById("content").value);
+    var imageFile = document.getElementById("imageFile").files[0];
+    if (imageFile) {
+        formData.append("imageFile", imageFile);
+    }
 
     // Check if required fields are filled
     if (
-        jsonData.title === "" ||
-        jsonData.content === "" ||
-        jsonData.author === "" ||
-        jsonData.imageUrl === ""
+        formData.get("restaurantName") === "" ||
+        formData.get("location") === "" ||
+        formData.get("visitDate") === "" ||
+        formData.get("rating") === "" ||
+        formData.get("feedback") === ""
     ) {
         document.getElementById("message").innerHTML =
             "All fields are required!";
@@ -19,40 +30,43 @@ function addBlogPost() {
         return;
     }
 
-    // Perform a POST request to add the blog post
+    // Perform a POST request to add the feedback
     var request = new XMLHttpRequest();
-    request.open("POST", "/add-blog-post", true);
-    request.setRequestHeader("Content-Type", "application/json");
+    request.open("POST", "/add-blogpost", true);
+
+    // No need to set `Content-Type` here, as `FormData` handles it automatically.
     request.onload = function () {
         response = JSON.parse(request.responseText);
         console.log(response);
 
-        if (response.message === undefined) {
-            // Successfully added the blog post
+        if (response.success) {
+            // Successfully added the feedback
             document.getElementById("message").innerHTML =
-                "Added Blog Post: " + jsonData.title + "!";
+                "Added Feedback for: " + formData.get("restaurantName") + "!";
             document
                 .getElementById("message")
                 .setAttribute("class", "text-success");
 
             // Clear input fields
-            document.getElementById("title").value = "";
+            document.getElementById("restaurantName").value = "";
+            document.getElementById("location").value = "";
+            document.getElementById("visitDate").value = "";
+            document.getElementById("rating").value = "";
             document.getElementById("content").value = "";
-            document.getElementById("author").value = "";
-            document.getElementById("imageUrl").value = "";
+            document.getElementById("imageFile").value = "";
 
-            // Redirect or refresh the blog posts section
+            // Redirect or refresh the feedback section
             window.location.href = "index.html";
         } else {
-            // Handle failure in adding the blog post
+            // Handle failure in adding feedback
             document.getElementById("message").innerHTML =
-                "Unable to add blog post!";
+                "Unable to add feedback!";
             document
                 .getElementById("message")
                 .setAttribute("class", "text-danger");
         }
     };
 
-    // Send the blog post data as JSON
-    request.send(JSON.stringify(jsonData));
+    // Send the feedback data as FormData
+    request.send(formData);
 }
