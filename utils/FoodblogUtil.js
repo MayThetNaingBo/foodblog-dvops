@@ -1,5 +1,19 @@
 const { BlogPost } = require("../models/Foodblog");
 const fs = require("fs").promises;
+const path = require("path");
+
+// Define the file path
+const dataFilePath = path.join(__dirname, "foodblogs.json");
+
+// Ensure the file exists before reading or writing
+async function ensureFileExists() {
+    try {
+        await fs.access(dataFilePath);
+    } catch (err) {
+        // File doesn't exist, create it with an empty array
+        await fs.writeFile(dataFilePath, JSON.stringify([]), "utf8");
+    }
+}
 
 // Function to read JSON data from a file
 async function readJSON(filename) {
@@ -29,10 +43,19 @@ async function writeJSON(object, filename) {
     }
 }
 
+// Function to fetch all feedback on page load
+async function readAllFeedback() {
+    try {
+        return await readJSON(dataFilePath);
+    } catch (error) {
+        console.error("Error reading all feedback:", error);
+        throw error;
+    }
+}
+
 // Function to add a new blog post
 async function addFeedback(req, res) {
     try {
-        // Destructure and validate request body
         const {
             restaurantName,
             location,
@@ -42,7 +65,6 @@ async function addFeedback(req, res) {
             imageUrl,
         } = req.body;
 
-        // Simple validation checks
         if (
             !restaurantName ||
             !location ||
@@ -54,11 +76,8 @@ async function addFeedback(req, res) {
             return res.status(400).json({
                 message: "Validation error: All fields are required.",
             });
-            
         }
-        
 
-        // Create a new blog post instance (adjusted to match the feedback structure)
         const newBlogPost = new BlogPost(
             restaurantName,
             location,
@@ -68,7 +87,6 @@ async function addFeedback(req, res) {
             imageUrl
         );
 
-        // Write the new post to the JSON file and return updated list of posts
         const updatedBlogPosts = await writeJSON(
             newBlogPost,
             "utils/foodblogs.json"
@@ -88,9 +106,11 @@ async function getFeedback(req, res) {
         res.status(500).json({ message: "Unable to fetch feedback data." });
     }
 }
+
 module.exports = {
     readJSON,
     writeJSON,
     addFeedback,
     getFeedback,
+    readAllFeedback,
 };

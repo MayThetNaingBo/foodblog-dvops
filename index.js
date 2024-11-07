@@ -2,7 +2,13 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 const PORT = process.env.PORT || 5050;
-const { readJSON, addFeedback, getFeedback } = require("./utils/FoodblogUtil");
+const {
+    writeJSON,
+    readJSON,
+    addFeedback,
+    getFeedback,
+    readAllFeedback,
+} = require("./utils/FoodblogUtil");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -19,7 +25,7 @@ app.get("/get-feedback", getFeedback);
 // Route to send initial JSON data
 app.get("/initial-data", async (req, res) => {
     try {
-        const initialData = await readJSON("utils/foodblogs.json");
+        const initialData = await readAllFeedback();
         res.json(initialData);
     } catch (error) {
         res.status(500).json({ message: "Error loading initial data." });

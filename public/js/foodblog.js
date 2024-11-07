@@ -1,3 +1,27 @@
+document.addEventListener("DOMContentLoaded", function () {
+    fetchFeedback();
+});
+
+function fetchFeedback() {
+    fetch("/initial-data")
+        .then((response) => response.json())
+        .then((data) => {
+            let feedbackContainer =
+                document.getElementById("feedback-container");
+            feedbackContainer.innerHTML = "";
+            data.forEach((feedback) => {
+                let feedbackDiv = document.createElement("div");
+                feedbackDiv.classList.add("feedback-item");
+                feedbackDiv.innerHTML = `<h3>${feedback.restaurantName}</h3>
+                                         <p>${feedback.location} - ${feedback.visitDate}</p>
+                                         <p>Rating: ${feedback.rating}</p>
+                                         <p>${feedback.content}</p>
+                                         <img src="${feedback.imageUrl}" alt="Image of ${feedback.restaurantName}">`;
+                feedbackContainer.appendChild(feedbackDiv);
+            });
+        })
+        .catch((error) => console.error("Error loading feedback:", error));
+}
 function addFeedback() {
     var response = "";
     var formData = new FormData();
