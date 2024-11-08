@@ -1,18 +1,19 @@
 const { BlogPost } = require("../models/Foodblog");
 const fs = require("fs").promises;
+const path = require("path");
 
-// Function to read JSON data from a file
+const dataFilePath = path.join(__dirname, "foodblogs.json");
+
 async function readJSON(filename) {
     try {
         const data = await fs.readFile(filename, "utf8");
         return JSON.parse(data);
     } catch (err) {
-        console.error(err);
+        console.error("Error reading JSON file:", err);
         throw err;
     }
 }
 
-// Function to write an object to JSON file
 async function writeJSON(object, filename) {
     try {
         const allObjects = await readJSON(filename);
@@ -21,40 +22,35 @@ async function writeJSON(object, filename) {
             filename,
             JSON.stringify(allObjects, null, 2),
             "utf8"
-        ); // Adding null, 2 for pretty-printing JSON
+        );
         return allObjects;
     } catch (err) {
-        console.error(err);
+        console.error("Error writing to JSON file:", err);
         throw err;
     }
 }
 
-
-// Function to fetch all feedback on page load
-async function readAllFeedback() {
+async function ensureFileExists() {
     try {
-        return await readJSON(dataFilePath);
-    } catch (error) {
-        console.error("Error reading all feedback:", error);
-        throw error;
+        await fs.access(dataFilePath);
+    } catch (err) {
+        await fs.writeFile(dataFilePath, "[]", "utf8"); // Initialize with an empty array
     }
 }
 
-// Function to add a new blog post
-
 async function addFeedback(req, res) {
     try {
-        // Destructure and validate request body
         const {
             restaurantName,
             location,
             visitDate,
             rating,
             content,
-            imageUrl = "images/default.jpg", // Use default image if none provided
+            imageUrl = "images/default.jpg",
         } = req.body;
 
-        // Simple validation checks
+        // Debugging log to see incoming data
+        console.log("Received data:", req.body);
 
         if (
             !restaurantName ||
@@ -68,10 +64,7 @@ async function addFeedback(req, res) {
                 message:
                     "Validation error: All required fields must be filled with valid data.",
             });
-            
         }
-        
-
 
         const newBlogPost = new BlogPost(
             restaurantName,
@@ -81,19 +74,8 @@ async function addFeedback(req, res) {
             content,
             imageUrl
         );
-
-
-        // Save the new blog post data
         const updatedBlogPosts = await writeJSON(newBlogPost, dataFilePath);
         return res.status(201).json({ success: true, data: updatedBlogPosts });
-
-        // Write the new post to the JSON file and return updated list of posts
-        const updatedBlogPosts = await writeJSON(
-            newBlogPost,
-            "utils/foodblogs.json"
-        );
-        return res.status(201).json(updatedBlogPosts);
-
     } catch (error) {
         console.error("Error adding feedback:", error);
         return res
@@ -114,13 +96,11 @@ async function getFeedback(req, res) {
         res.status(500).json({ message: "Unable to fetch feedback data." });
     }
 }
+
 module.exports = {
     readJSON,
     writeJSON,
     addFeedback,
     getFeedback,
-
-    readAllFeedback,
     ensureFileExists,
-
 };
