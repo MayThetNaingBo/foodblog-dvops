@@ -71,29 +71,27 @@ function fetchFeedback() {
 document.addEventListener("DOMContentLoaded", fetchFeedback);
 
 function displayFeedback(feedback) {
-    const { restaurantName, location, visitDate, rating, content, imageUrl } =
-        feedback;
+    const { restaurantName, location, visitDate, rating, content, imageUrl } = feedback;
     const feedbackCard = document.createElement("div");
     feedbackCard.className = "col-md-4 mb-4";
+
+    // Generate stars based on the rating
+    let stars = "Rating: ";
+    for (let i = 1; i <= 5; i++) {
+        stars += `<span style="color: ${i <= rating ? 'gold' : 'gray'};">&#9733;</span>`;
+    }
+
     feedbackCard.innerHTML = `
-        <div class="card h-100" style="cursor: pointer;">
+        <div class="card h-100">
             <img src="${imageUrl}" class="card-img-top" alt="${restaurantName}">
             <div class="card-body">
                 <h5 class="card-title">${restaurantName}</h5>
-                <p class="card-text">${content.slice(0, 50)}...</p>
-                <small class="text-muted">Location: ${location} | Rating: ${rating} Stars</small>
+                <p class="card-text">${content}</p>
+                <div>${stars}</div>
+                <small class="text-muted">Location: ${location} | Date: ${visitDate}</small>
             </div>
         </div>
     `;
-    feedbackCard.addEventListener("click", function () {
-        viewFeedback(
-            restaurantName,
-            location,
-            visitDate,
-            rating,
-            content,
-            imageUrl
-        );
-    });
+
     document.getElementById("blog-posts-container").appendChild(feedbackCard);
 }
