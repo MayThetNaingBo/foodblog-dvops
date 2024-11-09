@@ -1,8 +1,15 @@
-const { BlogPost } = require("../models/Foodblog");
 const fs = require("fs").promises;
 const path = require("path");
 
 const dataFilePath = path.join(__dirname, "foodblogs.json");
+
+async function ensureFileExists() {
+    try {
+        await fs.access(dataFilePath);
+    } catch (err) {
+        await fs.writeFile(dataFilePath, "[]", "utf8"); // Initialize with an empty array if file doesn't exist
+    }
+}
 
 async function readJSON(filename) {
     try {
@@ -30,72 +37,40 @@ async function writeJSON(object, filename) {
     }
 }
 
-async function ensureFileExists() {
-    try {
-        await fs.access(dataFilePath);
-    } catch (err) {
-        await fs.writeFile(dataFilePath, "[]", "utf8"); // Initialize with an empty array
-    }
-}
-
 async function addFeedback(req, res) {
     try {
-        const {
-            restaurantName,
-            location,
-            visitDate,
-            rating,
-            content,
-            imageUrl,
-        } = req.body;
+        let { restaurantName, location, visitDate, rating, content, imageUrl } =
+            req.body;
 
-        // Debugging log to see incoming data
         console.log("Received data:", req.body);
 
-        // Validation
-        if (!restaurantName) {
-            return res.status(400).json({
-                success: false,
-                message: "Validation error: Restaurant name is required.",
-            });
-        }
-        if (!location) {
-            return res.status(400).json({
-                success: false,
-                message: "Validation error: Location is required.",
-            });
-        }
-        if (!visitDate) {
-            return res.status(400).json({
-                success: false,
-                message: "Validation error: Date of visit is required.",
-            });
-        }
+        // Validation with meaningful error messages
+        if (!restaurantName)
+            return res
+                .status(400)
+                .send("Validation error: Restaurant Name is required.");
+        if (!location)
+            return res
+                .status(400)
+                .send("Validation error: Location is required.");
+        if (!visitDate)
+            return res
+                .status(400)
+                .send("Validation error: Date of Visit is required.");
         if (!content || content.length < 6) {
-            return res.status(400).json({
-                success: false,
-                message:
-                    "Validation error: Feedback content must be at least 6 characters.",
-            });
-        }
-        if (!imageUrl) {
-            return res.status(400).json({
-                success: false,
-                message: "Validation error: Image URL is required.",
-            });
+            return res
+                .status(400)
+                .send("Validation error: Please try to provide feedback.");
         }
 
-        // URL validation for imageUrl
+        // Set a default image if imageUrl is not provided or invalid
         const urlPattern = /^(https?:\/\/)/i;
-        if (!urlPattern.test(imageUrl)) {
-            return res.status(400).json({
-                success: false,
-                message:
-                    "Validation error: Please provide a valid URL for the image.",
-            });
-        }
+        imageUrl =
+            imageUrl && urlPattern.test(imageUrl)
+                ? imageUrl
+                : "images/NoImage.jpg"; // Default image path
 
-        // Create and save the new blog post
+        // Create a new blog post object
         const newBlogPost = new BlogPost(
             restaurantName,
             location,
@@ -104,14 +79,14 @@ async function addFeedback(req, res) {
             content,
             imageUrl
         );
+
+        // Write the new blog post to the JSON file
         const updatedBlogPosts = await writeJSON(newBlogPost, dataFilePath);
+
         return res.status(201).json({ success: true, data: updatedBlogPosts });
     } catch (error) {
         console.error("Error adding feedback:", error);
-        return res.status(500).json({
-            success: false,
-            message: "Server error. Unable to add feedback.",
-        });
+        return res.status(500).send("Server error: Unable to add feedback.");
     }
 }
 
@@ -126,9 +101,9 @@ async function getFeedback(req, res) {
 }
 
 module.exports = {
+    ensureFileExists,
     readJSON,
     writeJSON,
     addFeedback,
     getFeedback,
-    ensureFileExists,
 };

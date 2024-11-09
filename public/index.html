@@ -15,25 +15,24 @@
         <link rel="stylesheet" href="css/styles.css" />
     </head>
     <body>
+        <!-- Fixed POST Button -->
+        <a href="addpost.html" class="btn fixed-post-button">POST</a>
+
         <div class="container mt-5">
             <!-- Message Display Area -->
             <div id="message" class="text-center mt-3"></div>
 
             <!-- Logo -->
             <div class="row justify-content-center">
-                <img src="images/logo.jpg" alt="Logo" class="img-fluid" />
+                <img
+                    src="images/logo.jpg"
+                    alt="Logo"
+                    class="img-fluid logo-image"
+                />
             </div>
 
             <!-- Feedback Grid -->
-            <div class="row mt-4" id="blog-posts-container">
-                <!-- Feedback entries will be added here dynamically -->
-            </div>
-
-            <!-- Add Feedback Button -->
-            <div class="row justify-content-center mt-4">
-                <!-- Change the POST button to a link to `add-post.html` -->
-                <a href="addpost.html" class="btn btn-warning">POST</a>
-            </div>
+            <div class="row mt-4" id="blog-posts-container"></div>
         </div>
 
         <!-- Modal for Viewing Feedback Details -->
@@ -69,9 +68,15 @@
                         <h5 id="viewRestaurantName"></h5>
                         <p id="viewContent"></p>
                         <small class="text-muted">
-                            Location: <span id="viewLocation"></span> | Date:
-                            <span id="viewVisitDate"></span> | Rating:
-                            <span id="viewRating"></span> Stars
+                            <div class="info-line">
+                                Location: <span id="viewLocation"></span>
+                            </div>
+                            <div class="info-line">
+                                Date: <span id="viewVisitDate"></span>
+                            </div>
+                            <div class="info-line">
+                                Rating: <span id="viewRating"></span> Stars
+                            </div>
                         </small>
                     </div>
                 </div>

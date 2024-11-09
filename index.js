@@ -35,7 +35,12 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-app.get("/get-feedback", getFeedback);
+app.get("/get-feedback", (req, res) => {
+    getFeedback(req, res).catch((error) => {
+        console.error("Error fetching feedback:", error);
+        res.status(500).json({ message: "Error fetching feedback." });
+    });
+});
 
 app.get("/initial-data", async (req, res) => {
     try {
@@ -47,7 +52,12 @@ app.get("/initial-data", async (req, res) => {
     }
 });
 
-app.post("/add-blogpost", addFeedback);
+app.post("/add-blogpost", (req, res) => {
+    addFeedback(req, res).catch((error) => {
+        console.error("Error adding feedback:", error);
+        res.status(500).json({ message: "Error adding feedback." });
+    });
+});
 
 startServer();
 

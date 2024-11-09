@@ -14,7 +14,7 @@ class BlogPost {
         this.content = content;
         this.imageUrl = imageUrl;
 
-        // Generate a title from the restaurant name and rating
+        // Generate a title from the restaurant name and rating stars
         this.title = `${restaurantName} - ${rating} Stars`;
 
         // Automatically generate a timestamp and unique ID

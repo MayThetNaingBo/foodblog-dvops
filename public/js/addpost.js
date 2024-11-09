@@ -1,25 +1,16 @@
+// Submit Post Function
 function submitPost() {
     const restaurantName = document.getElementById("restaurantName").value;
     const location = document.getElementById("location").value;
     const visitDate = document.getElementById("visitDate").value;
     const content = document.getElementById("content").value;
-    const imageUrl = document.getElementById("imageUrl").value;
+    let imageUrl = document.getElementById("imageUrl").value;
     const rating = document.querySelector(
         'input[name="rating"]:checked'
-    )?.value; // Get selected rating
+    )?.value;
 
-    // Validation to check if all fields are filled
-    if (
-        !restaurantName ||
-        !location ||
-        !visitDate ||
-        !content ||
-        !imageUrl ||
-        !rating
-    ) {
-        const messageElement = document.getElementById("message");
-        messageElement.innerHTML = "All fields are required!";
-        messageElement.setAttribute("class", "text-danger");
+    if (!restaurantName || !location || !visitDate || !content || !rating) {
+        alert("All fields are required!");
         return;
     }
 
@@ -37,31 +28,26 @@ function submitPost() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(feedbackData),
     })
-        .then((response) => response.json())
+        .then((response) => {
+            if (!response.ok) {
+                return response.text().then((message) => {
+                    throw new Error(message);
+                });
+            }
+            return response.json();
+        })
         .then((response) => {
             if (response.success) {
-                // Redirect to the main page after successful submission
                 window.location.href = "index.html";
-            } else {
-                const messageElement = document.getElementById("message");
-                messageElement.innerHTML =
-                    response.message || "Unable to add feedback!";
-                messageElement.setAttribute("class", "text-danger");
             }
         })
         .catch((error) => {
-            const messageElement = document.getElementById("message");
-            messageElement.innerHTML =
-                "Network error. Unable to connect to server.";
-            messageElement.setAttribute("class", "text-danger");
-            console.error(
-                "Network error occurred while sending feedback:",
-                error
-            );
+            alert(error.message); // Display validation error as an alert
+            console.error("Error occurred:", error);
         });
 }
 
 function cancelPost() {
-    // Redirect back to the main page
     window.location.href = "index.html";
 }
+// Go back to the main page after submitting the post successfully

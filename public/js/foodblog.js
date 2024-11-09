@@ -1,3 +1,4 @@
+// Add feedback function
 function addFeedback() {
     const restaurantName = document.getElementById("restaurantName").value;
     const location = document.getElementById("location").value;
@@ -17,9 +18,7 @@ function addFeedback() {
     };
 
     if (!restaurantName || !location || !visitDate || !content) {
-        const messageElement = document.getElementById("message");
-        messageElement.innerHTML = "All fields are required!";
-        messageElement.setAttribute("class", "text-danger");
+        alert("All fields are required!");
         return;
     }
 
@@ -30,24 +29,16 @@ function addFeedback() {
     })
         .then((response) => response.json())
         .then((response) => {
-            const messageElement = document.getElementById("message");
             if (response.success) {
-                messageElement.innerHTML =
-                    "Added Feedback for: " + restaurantName + "!";
-                messageElement.setAttribute("class", "text-success");
+                alert("Added Feedback for: " + restaurantName + "!");
                 document.getElementById("blogPostForm").reset();
                 fetchFeedback();
             } else {
-                messageElement.innerHTML =
-                    response.message || "Unable to add feedback!";
-                messageElement.setAttribute("class", "text-danger");
+                alert(response.message || "Unable to add feedback!");
             }
         })
         .catch((error) => {
-            const messageElement = document.getElementById("message");
-            messageElement.innerHTML =
-                "Network error. Unable to connect to server.";
-            messageElement.setAttribute("class", "text-danger");
+            alert("Network error. Unable to connect to server.");
             console.error(
                 "Network error occurred while sending feedback:",
                 error
@@ -55,6 +46,7 @@ function addFeedback() {
         });
 }
 
+// Fetch the Feedback
 function fetchFeedback() {
     fetch("/initial-data")
         .then((response) => response.json())
@@ -70,15 +62,19 @@ function fetchFeedback() {
 
 document.addEventListener("DOMContentLoaded", fetchFeedback);
 
+// Function which displays the feedback on the main page when successful
 function displayFeedback(feedback) {
-    const { restaurantName, location, visitDate, rating, content, imageUrl } = feedback;
+    const { restaurantName, location, visitDate, rating, content, imageUrl } =
+        feedback;
     const feedbackCard = document.createElement("div");
     feedbackCard.className = "col-md-4 mb-4";
 
     // Generate stars based on the rating
     let stars = "Rating: ";
     for (let i = 1; i <= 5; i++) {
-        stars += `<span style="color: ${i <= rating ? 'gold' : 'gray'};">&#9733;</span>`;
+        stars += `<span style="color: ${
+            i <= rating ? "gold" : "gray"
+        };">&#9733;</span>`;
     }
 
     feedbackCard.innerHTML = `

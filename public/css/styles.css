@@ -14,7 +14,7 @@
     text-overflow: ellipsis;
 }
 .modal-body {
-    max-height: 400px; /* Set max height as per your layout */
+    max-height: 400px;
     overflow-y: auto;
 }
 .custom-yellow {
@@ -24,12 +24,12 @@
 }
 
 .custom-yellow:hover {
-    background-color: #e0a800; /* Darker shade on hover */
+    background-color: #e0a800; /* A little bit dark when on hover */
     border-color: #e0a800;
 }
-.form-control-textare,
+.form-control-textarea,
 #content {
-    height: 100px; /* Increase height as desired */
+    height: 100px;
 }
 /* Center the form in the middle of the page */
 .center-container {
@@ -38,15 +38,14 @@
     align-items: center;
     min-height: 100vh;
     padding: 20px;
-    background-color: #f8f9fa; /* Optional: Add a light background */
 }
 .form-container {
     width: 100%;
-    max-width: 500px; /* Limit the width */
+    max-width: 500px;
     background-color: #ffffff;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 .rating-group {
     display: flex;
@@ -77,5 +76,27 @@
     background-color: gold; /* Fill the circle with solid yellow when selected */
 }
 .button-group button {
-    margin-left: 10px; /* Adjust as needed */
+    margin-left: 10px;
+}
+.fixed-post-button {
+    position: fixed; /* Makes the button fixed on the screen */
+    top: 40px; /* Position it from the top */
+    right: 60px; /* Position it from the right */
+    z-index: 1000; /* Ensures it stays above other content */
+    padding: 10px 20px;
+    background-color: #ffc107;
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+.fixed-post-button:hover {
+    background-color: #e0a800; /* Changes color on hover */
+}
+.logo-image {
+    margin-top: -30px; /* Adjust the negative margin as needed to move the logo up */
+}
+.info-line {
+    display: block;
+    margin-bottom: 5px; /* Adjust spacing as needed */
 }
