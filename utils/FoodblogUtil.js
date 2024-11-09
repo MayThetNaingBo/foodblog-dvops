@@ -46,26 +46,56 @@ async function addFeedback(req, res) {
             visitDate,
             rating,
             content,
-            imageUrl = "images/default.jpg",
+            imageUrl,
         } = req.body;
 
         // Debugging log to see incoming data
         console.log("Received data:", req.body);
 
-        if (
-            !restaurantName ||
-            !location ||
-            !visitDate ||
-            !content ||
-            content.length < 6
-        ) {
+        // Validation
+        if (!restaurantName) {
+            return res.status(400).json({
+                success: false,
+                message: "Validation error: Restaurant name is required.",
+            });
+        }
+        if (!location) {
+            return res.status(400).json({
+                success: false,
+                message: "Validation error: Location is required.",
+            });
+        }
+        if (!visitDate) {
+            return res.status(400).json({
+                success: false,
+                message: "Validation error: Date of visit is required.",
+            });
+        }
+        if (!content || content.length < 6) {
             return res.status(400).json({
                 success: false,
                 message:
-                    "Validation error: All required fields must be filled with valid data.",
+                    "Validation error: Feedback content must be at least 6 characters.",
+            });
+        }
+        if (!imageUrl) {
+            return res.status(400).json({
+                success: false,
+                message: "Validation error: Image URL is required.",
             });
         }
 
+        // URL validation for imageUrl
+        const urlPattern = /^(https?:\/\/)/i;
+        if (!urlPattern.test(imageUrl)) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Validation error: Please provide a valid URL for the image.",
+            });
+        }
+
+        // Create and save the new blog post
         const newBlogPost = new BlogPost(
             restaurantName,
             location,
@@ -78,12 +108,10 @@ async function addFeedback(req, res) {
         return res.status(201).json({ success: true, data: updatedBlogPosts });
     } catch (error) {
         console.error("Error adding feedback:", error);
-        return res
-            .status(500)
-            .json({
-                success: false,
-                message: "Server error. Unable to add feedback.",
-            });
+        return res.status(500).json({
+            success: false,
+            message: "Server error. Unable to add feedback.",
+        });
     }
 }
 

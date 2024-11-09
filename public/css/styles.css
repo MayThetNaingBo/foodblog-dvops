@@ -27,3 +27,55 @@
     background-color: #e0a800; /* Darker shade on hover */
     border-color: #e0a800;
 }
+.form-control-textare,
+#content {
+    height: 100px; /* Increase height as desired */
+}
+/* Center the form in the middle of the page */
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    background-color: #f8f9fa; /* Optional: Add a light background */
+}
+.form-container {
+    width: 100%;
+    max-width: 500px; /* Limit the width */
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+.rating-group {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 10px;
+}
+.rating-group label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 14px;
+    color: gray;
+    cursor: pointer;
+}
+.rating-group input[type="radio"] {
+    display: none;
+}
+.rating-group label span {
+    width: 24px;
+    height: 24px;
+    background-color: gray;
+    border-radius: 50%;
+    display: inline-block;
+    margin-top: 5px;
+}
+.rating-group input[type="radio"]:checked + label span {
+    background-color: gold; /* Fill the circle with solid yellow when selected */
+}
+.button-group button {
+    margin-left: 10px; /* Adjust as needed */
+}
