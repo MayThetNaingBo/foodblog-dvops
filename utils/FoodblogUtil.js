@@ -70,7 +70,7 @@ async function addFeedback(req, res) {
         imageUrl =
             imageUrl && urlPattern.test(imageUrl)
                 ? imageUrl
-                : "images/default.jpg"; // Default image path
+                : "images/NoImage.jpg"; // Default image path
 
         // Create a new blog post object
         const newBlogPost = {

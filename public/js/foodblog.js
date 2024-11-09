@@ -6,7 +6,7 @@ function addFeedback() {
     const rating = document.getElementById("rating").value;
     const content = document.getElementById("content").value;
     const imageUrl =
-        document.getElementById("imageFile").value || "images/default.jpg";
+        document.getElementById("imageFile").value || "images/NoImage.jpg";
 
     const feedbackData = {
         restaurantName,
