@@ -44,11 +44,11 @@ async function addFeedback(req, res) {
 
         console.log("Received data:", req.body);
 
-        // Validation with meaningful error messages
+        // Validation
         if (!restaurantName)
             return res
                 .status(400)
-                .send("Validation error: Restaurant Name is required.");
+                .send("Validation error: Restaurant name is required.");
         if (!location)
             return res
                 .status(400)
@@ -56,11 +56,13 @@ async function addFeedback(req, res) {
         if (!visitDate)
             return res
                 .status(400)
-                .send("Validation error: Date of Visit is required.");
+                .send("Validation error: Date of visit is required.");
         if (!content || content.length < 6) {
             return res
                 .status(400)
-                .send("Validation error: Please try to provide feedback.");
+                .send(
+                    "Validation error: Feedback content must be at least 6 characters."
+                );
         }
 
         // Set a default image if imageUrl is not provided or invalid
@@ -68,21 +70,23 @@ async function addFeedback(req, res) {
         imageUrl =
             imageUrl && urlPattern.test(imageUrl)
                 ? imageUrl
-                : "images/NoImage.jpg"; // Default image path
+                : "images/default.jpg"; // Default image path
 
         // Create a new blog post object
-        const newBlogPost = new BlogPost(
+        const newBlogPost = {
+            id: Date.now().toString(), // Generating a unique ID
             restaurantName,
             location,
             visitDate,
             rating,
             content,
-            imageUrl
-        );
+            imageUrl,
+        };
 
         // Write the new blog post to the JSON file
         const updatedBlogPosts = await writeJSON(newBlogPost, dataFilePath);
 
+        console.log("Feedback added successfully:", newBlogPost);
         return res.status(201).json({ success: true, data: updatedBlogPosts });
     } catch (error) {
         console.error("Error adding feedback:", error);
