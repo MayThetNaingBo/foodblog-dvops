@@ -3,6 +3,14 @@ const path = require("path");
 
 const dataFilePath = path.join(__dirname, "foodblogs.json");
 
+// Banned words list
+const bannedWords = ["awful", "kill", "terrible", "stupid"];
+function containsBannedWords(content) {
+    return bannedWords.some((word) =>
+        content.toLowerCase().includes(word.toLowerCase())
+    );
+}
+
 async function ensureFileExists() {
     try {
         await fs.access(dataFilePath);
@@ -42,25 +50,14 @@ async function addFeedback(req, res) {
         let { restaurantName, location, visitDate, rating, content, imageUrl } =
             req.body;
 
-        console.log("Received data:", req.body);
-
-        // Validation with meaningful error messages
-        if (!restaurantName)
+        // Check for inappropriate content
+        const isInappropriate = containsBannedWords(content);
+        if (isInappropriate) {
             return res
                 .status(400)
-                .send("Validation error: Restaurant Name is required.");
-        if (!location)
-            return res
-                .status(400)
-                .send("Validation error: Location is required.");
-        if (!visitDate)
-            return res
-                .status(400)
-                .send("Validation error: Date of Visit is required.");
-        if (!content || content.length < 6) {
-            return res
-                .status(400)
-                .send("Validation error: Please try to provide feedback.");
+                .send(
+                    "Validation error: Feedback content must be at least 6 characters."
+                );
         }
 
         // Set a default image if imageUrl is not provided or invalid
@@ -71,19 +68,18 @@ async function addFeedback(req, res) {
                 : "images/NoImage.jpg"; // Default image path
 
         // Create a new blog post object
-        const newBlogPost = new BlogPost(
+        const newBlogPost = {
+            id: Date.now().toString(), // Generating a unique ID
             restaurantName,
             location,
             visitDate,
             rating,
             content,
-            imageUrl
-        );
+            imageUrl: imageUrl || "images/NoImage.jpg",
+        };
 
-        // Write the new blog post to the JSON file
-        const updatedBlogPosts = await writeJSON(newBlogPost, dataFilePath);
-
-        return res.status(201).json({ success: true, data: updatedBlogPosts });
+        const updatedFeedback = await writeJSON(feedbackData, dataFilePath);
+        return res.status(201).json({ success: true, data: updatedFeedback });
     } catch (error) {
         console.error("Error adding feedback:", error);
         return res.status(500).send("Server error: Unable to add feedback.");

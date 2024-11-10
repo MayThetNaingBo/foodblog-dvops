@@ -1,9 +1,13 @@
 const express = require("express");
 const path = require("path");
 const app = express();
+
 const PORT = process.env.PORT || 3000;
 
 // Import functions from UpdateDeleteFeedbackUtil
+
+const PORT = 3000;
+
 const {
     updateFeedback,
     deleteFeedback,
@@ -13,7 +17,13 @@ const {
     writeJSON,
 } = require("./utils/UpdateDeleteFeedbackUtil");
 
-const dataFilePath = path.join(__dirname, "utils", "foodblogs.json");
+const {
+    getPostById,
+    getComments,
+    addComment,
+    editComment,
+    deleteComment,
+} = require("./utils/UserComments");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -28,7 +38,7 @@ async function startServer() {
             const baseUrl = `http://${
                 address.address === "::" ? "localhost" : address.address
             }:${address.port}`;
-            console.log(`Demo project at: ${baseUrl}`);
+            console.log(`Server started at: ${baseUrl}`);
         });
     } catch (error) {
         console.error("Error ensuring file exists:", error);
@@ -36,9 +46,13 @@ async function startServer() {
 }
 
 // Serve the main HTML file
+
+// Route to serve the home page
+
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
+
 
 // Get all feedback entries
 app.get("/get-feedback", async (req, res) => {
@@ -46,21 +60,31 @@ app.get("/get-feedback", async (req, res) => {
         const allPosts = await readJSON(dataFilePath);
         res.json(allPosts);
     } catch (error) {
+
+// Route to get feedback (all posts)
+app.get("/get-feedback", (req, res) => {
+    getFeedback(req, res).catch((error) => {
+
         console.error("Error fetching feedback:", error);
         res.status(500).json({ message: "Error fetching feedback." });
     }
 });
 
+
 // Load initial data from JSON file
+
+// Route to get initial data for posts
+
 app.get("/initial-data", async (req, res) => {
     try {
-        const initialData = await readJSON(dataFilePath);
+        const initialData = await readJSON(path.join(__dirname, "utils", "foodblogs.json"));
         res.json(initialData);
     } catch (error) {
         console.error("Error loading initial data:", error);
         res.status(500).json({ message: "Error loading initial data." });
     }
 });
+
 
 // Add new feedback entry
 app.post("/add-blogpost", async (req, res) => {
@@ -75,6 +99,11 @@ app.post("/add-blogpost", async (req, res) => {
             newFeedback,
         });
     } catch (error) {
+
+// Route to add a new blog post
+app.post("/add-blogpost", (req, res) => {
+    addFeedback(req, res).catch((error) => {
+
         console.error("Error adding feedback:", error);
         res.status(500).json({ message: "Error adding feedback." });
     }
@@ -110,7 +139,25 @@ app.delete("/delete-feedback/:id", async (req, res) => {
     }
 });
 
+
 // Start the server
+
+// Route to get a specific post by ID for detailed view
+app.get("/get-post/:id", getPostById);
+
+// Route to get comments for a specific post
+app.get("/get-comments/:id", getComments);
+
+// Route to add a comment to a specific post
+app.post("/add-comment/:id", addComment);
+
+// Route to edit a comment on a specific post
+app.put("/edit-comment/:id/:commentId", editComment);
+
+// Route to delete a comment from a specific post
+app.delete("/delete-comment/:id/:commentId", deleteComment);
+
+
 startServer();
 
 module.exports = { app };
