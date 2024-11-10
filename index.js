@@ -1,9 +1,21 @@
 const express = require("express");
 const path = require("path");
 const app = express();
+<<<<<<< HEAD
 const PORT = process.env.PORT || 3000;
 
 const { getPostById, getComments, addComment } = require("./utils/UserComments");
+=======
+const PORT = 3000;
+const {
+    addFeedback,
+    getFeedback,
+    ensureFileExists,
+    readJSON,
+} = require("./utils/FoodblogUtil");
+
+const dataFilePath = path.join(__dirname, "utils", "foodblogs.json");
+>>>>>>> 6a2e7d7df84258af01d7298924bc747269776a74
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

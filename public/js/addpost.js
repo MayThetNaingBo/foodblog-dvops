@@ -9,8 +9,27 @@ function submitPost() {
         'input[name="rating"]:checked'
     )?.value;
 
+    const MIN_CONTENT_LENGTH = 5; // Set minimum word count for feedback section
+
+    // URL Checking
+    const urlRegex = /(https?:\/\/|www\.)/i; // Detects URLs starting with http://, https://, or www.
+
+    // Check for empty fields
     if (!restaurantName || !location || !visitDate || !content || !rating) {
         alert("All fields are required!");
+        return;
+    }
+
+    // Check if restaurant name contains a URL
+    if (urlRegex.test(restaurantName)) {
+        alert("Restaurant name should not contain URLs.");
+        return;
+    }
+
+    // Check for minimum feedback section length
+    const wordCount = content.trim().split(/\s+/).filter(Boolean).length;
+    if (wordCount < MIN_CONTENT_LENGTH) {
+        alert(`Feedback must be at least ${MIN_CONTENT_LENGTH} words.`);
         return;
     }
 
@@ -50,4 +69,7 @@ function submitPost() {
 function cancelPost() {
     window.location.href = "index.html";
 }
+<<<<<<< HEAD
 // Go back to the main page after submitting the post successfully
+=======
+>>>>>>> 6a2e7d7df84258af01d7298924bc747269776a74
