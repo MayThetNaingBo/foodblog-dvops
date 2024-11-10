@@ -1,10 +1,9 @@
 const express = require("express");
 const path = require("path");
 const app = express();
-
-// Import functions from UpdateDeleteFeedbackUtil
 const PORT = 3000;
 
+// Import functions from utility files
 const {
     updateFeedback,
     deleteFeedback,
@@ -18,6 +17,8 @@ const {
     getPostById,
     getComments,
     addComment,
+    editComment,
+    deleteComment, // Added missing imports for edit and delete comments
 } = require("./utils/UserComments");
 
 const dataFilePath = path.join(__dirname, "utils", "foodblogs.json");
@@ -42,7 +43,7 @@ async function startServer() {
     }
 }
 
-// Route to serve the home page
+// Serve the main HTML file
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
@@ -87,7 +88,7 @@ app.post("/add-blogpost", async (req, res) => {
     }
 });
 
-// Route to get specific feedback by ID for editing
+// Get specific feedback by ID for editing
 app.get("/get-feedback/:id", async (req, res) => {
     try {
         await getFeedbackById(req, res);
@@ -126,8 +127,13 @@ app.get("/get-comments/:id", getComments);
 // Route to add a comment to a specific post
 app.post("/add-comment/:id", addComment);
 
-// Route to edit a comment on a specific postn
+// Route to edit a comment on a specific post
+app.put("/edit-comment/:id/:commentId", editComment);
 
+// Route to delete a comment from a specific post
+app.delete("/delete-comment/:id/:commentId", deleteComment);
+
+// Start the server
 startServer();
 
 module.exports = { app };
