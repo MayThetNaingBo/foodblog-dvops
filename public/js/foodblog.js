@@ -61,7 +61,6 @@ function displayPosts(data) {
     const postsContainer = document.getElementById("blog-posts-container");
     postsContainer.innerHTML = ""; // Clear any existing posts
 
-
     data.forEach((post) => {
         const postElement = document.createElement("div");
         postElement.classList.add("col-md-4", "mb-3");
@@ -97,35 +96,12 @@ function displayPosts(data) {
                         <button class="btn btn-danger" onclick="deleteFeedback('${post.id}')">Delete</button>
                     </div>
                 </div>
-
-// Function which displays the feedback on the main page when successful
-function displayFeedback(feedback) {
-    const { id, restaurantName, location, visitDate, rating, content, imageUrl } = feedback;
-    const feedbackCard = document.createElement("div");
-    feedbackCard.className = "col-md-4 mb-4";
-
-    // Generate stars based on the rating
-    let stars = "Rating: ";
-    for (let i = 1; i <= 5; i++) {
-        stars += `<span style="color: ${i <= rating ? "gold" : "gray"};">&#9733;</span>`;
-    }
-
-    feedbackCard.innerHTML = `
-        <div class="card h-100" onclick="window.location.href='post.html?id=${id}'">
-            <img src="${imageUrl}" class="card-img-top" alt="${restaurantName}">
-            <div class="card-body">
-                <h5 class="card-title">${restaurantName}</h5>
-                <p class="card-text">${content}</p>
-                <div>${stars}</div>
-                <small class="text-muted">Location: ${location} | Date: ${visitDate}</small>
-
             </div>
         `;
 
         postsContainer.appendChild(postElement);
     });
 }
-
 
 // Function to delete feedback
 function deleteFeedback(id) {
@@ -169,7 +145,3 @@ function editFeedback(id) {
 
 // Call fetchFeedback when the page loads to display the posts initially
 document.addEventListener("DOMContentLoaded", fetchFeedback);
-
-// Fetch and display feedback posts on page load
-document.addEventListener("DOMContentLoaded", fetchFeedback);
-
