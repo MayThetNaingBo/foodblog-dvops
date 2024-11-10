@@ -69,3 +69,4 @@ function submitPost() {
 function cancelPost() {
     window.location.href = "index.html";
 }
+// Go back to the main page after submitting the post successfully

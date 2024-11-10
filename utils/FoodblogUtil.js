@@ -56,13 +56,20 @@ async function addFeedback(req, res) {
             return res
                 .status(400)
                 .send(
-                    "Your post may contain inappropriate or offensive words in language."
+                    "Validation error: Feedback content must be at least 6 characters."
                 );
         }
 
-        // Save feedback if successful
-        const feedbackData = {
-            id: Date.now().toString(),
+        // Set a default image if imageUrl is not provided or invalid
+        const urlPattern = /^(https?:\/\/)/i;
+        imageUrl =
+            imageUrl && urlPattern.test(imageUrl)
+                ? imageUrl
+                : "images/NoImage.jpg"; // Default image path
+
+        // Create a new blog post object
+        const newBlogPost = {
+            id: Date.now().toString(), // Generating a unique ID
             restaurantName,
             location,
             visitDate,
