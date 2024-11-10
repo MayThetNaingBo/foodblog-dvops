@@ -99,6 +99,7 @@ async function getFeedback(req, res) {
         res.status(500).json({ message: "Unable to fetch feedback data." });
     }
 }
+// Fetch a specific feedback post by ID
 
 module.exports = {
     ensureFileExists,
