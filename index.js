@@ -30,7 +30,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // Ensure the file exists and start the server
 async function startServer() {
     try {
-        await ensureFileExists(); // Ensure the feedback file is created if not present
+        await ensureFileExists();
         const server = app.listen(PORT, function () {
             const address = server.address();
             const baseUrl = `http://${
