@@ -56,18 +56,18 @@ function fetchFeedback() {
         .catch((error) => console.error("Error fetching feedback:", error));
 }
 
-function fetchFeedback1() {
-    fetch("/initial-data")
-        .then((response) => response.json())
-        .then((data) => {
-            const feedbackContainer = document.getElementById(
-                "blog-posts-container"
-            );
-            feedbackContainer.innerHTML = "";
-            data.forEach((feedback) => displayFeedback(feedback));
-        })
-        .catch((error) => console.error("Error loading feedback:", error));
-}
+// function fetchFeedback1() {
+//     fetch("/initial-data")
+//         .then((response) => response.json())
+//         .then((data) => {
+//             const feedbackContainer = document.getElementById(
+//                 "blog-posts-container"
+//             );
+//             feedbackContainer.innerHTML = "";
+//             data.forEach((feedback) => displayFeedback(feedback));
+//         })
+//         .catch((error) => console.error("Error loading feedback:", error));
+// }
 
 document.addEventListener("DOMContentLoaded", fetchFeedback);
 // Function which dynamically displays all feedback posts on the main page
@@ -118,15 +118,21 @@ function displayPosts(data) {
             }
 
             feedbackCard.innerHTML = `
-        <div class="card h-100" onclick="window.location.href='post.html?id=${id}'">
-            <img src="${imageUrl}" class="card-img-top" alt="${restaurantName}">
-            <div class="card-body">
-                <h5 class="card-title">${restaurantName}</h5>
-                <p class="card-text">${content}</p>
-                <div>${stars}</div>
-                <small class="text-muted">Location: ${location} | Date: ${visitDate}</small>
-            </div>
-        </div>
+                <div class="card h-100">
+                    <div  onclick="window.location.href='post.html?id=${post.id}'">
+                        <img src="${imageUrl}" class="card-img-top" alt="${restaurantName}">
+                        <div class="card-body">
+                            <h5 class="card-title">${restaurantName}</h5>
+                            <p class="card-text">${content}</p>
+                            <div>${stars}</div>
+                            <small class="text-muted">Location: ${location} | Date: ${visitDate}</small>   
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <button class="btn btn-warning" onclick="editFeedback('${post.id}')">Update</button>
+                        <button class="btn btn-danger" onclick="deleteFeedback('${post.id}')">Delete</button>
+                    </div>
+                </div>
     `;
 
             document
@@ -135,18 +141,20 @@ function displayPosts(data) {
         }
 
         postElement.innerHTML = `
-            <div class="card h-100">
-                <img src="${imageUrl}" class="card-img-top" alt="${restaurantName}">
-                <div class="card-body">
-                    <h5 class="card-title">${restaurantName}</h5>
-                    <p class="card-text">${content}</p>
-                    <div>${stars}</div>
-                    <small class="text-muted">Location: ${location} | Date: ${visitDate}</small>
-                    <div class="mt-3">
+             <div class="card h-100">
+                    <div  onclick="window.location.href='post.html?id=${post.id}'">
+                        <img src="${imageUrl}" class="card-img-top" alt="${restaurantName}">
+                        <div class="card-body">
+                            <h5 class="card-title">${restaurantName}</h5>
+                            <p class="card-text">${content}</p>
+                            <div>${stars}</div>
+                            <small class="text-muted">Location: ${location} | Date: ${visitDate}</small>   
+                        </div>
+                    </div>
+                    <div class="mb-2">
                         <button class="btn btn-warning" onclick="editFeedback('${post.id}')">Update</button>
                         <button class="btn btn-danger" onclick="deleteFeedback('${post.id}')">Delete</button>
                     </div>
-                </div>
             </div>
         `;
 
@@ -232,4 +240,4 @@ function displayFeedback(feedback) {
 
     document.getElementById("blog-posts-container").appendChild(feedbackCard);
 }
-document.addEventListener("DOMContentLoaded", fetchFeedback1);
+document.addEventListener("DOMContentLoaded", fetchFeedback);

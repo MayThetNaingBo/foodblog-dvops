@@ -1,6 +1,6 @@
 [
   {
-    "restaurantName": "Hawker Heaven",
+    "restaurantName": "Hawker Center",
     "location": "Chinatown, Singapore",
     "visitDate": "2024-11-05",
     "rating": "5",
@@ -89,6 +89,15 @@
     "location": "SIng",
     "visitDate": "2024-10-28",
     "rating": "3",
+    "content": "nice nice nice nice nice",
+    "imageUrl": "images/NoImage.jpg"
+  },
+  {
+    "id": "1731277382620",
+    "restaurantName": "Name",
+    "location": "Singapore",
+    "visitDate": "2024-11-26",
+    "rating": "2",
     "content": "nice nice nice nice nice",
     "imageUrl": "images/NoImage.jpg"
   }
