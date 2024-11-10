@@ -56,7 +56,7 @@ async function addFeedback(req, res) {
             return res
                 .status(400)
                 .send(
-                    "Validation error: Feedback content must be at least 6 characters."
+                    "Validation error: Feedback content contains inappropriate language."
                 );
         }
 
@@ -75,10 +75,11 @@ async function addFeedback(req, res) {
             visitDate,
             rating,
             content,
-            imageUrl: imageUrl || "images/NoImage.jpg",
+            imageUrl,
         };
 
-        const updatedFeedback = await writeJSON(feedbackData, dataFilePath);
+        // Write the new blog post to the JSON file
+        const updatedFeedback = await writeJSON(newBlogPost, dataFilePath);
         return res.status(201).json({ success: true, data: updatedFeedback });
     } catch (error) {
         console.error("Error adding feedback:", error);

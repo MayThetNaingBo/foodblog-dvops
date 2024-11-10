@@ -64,4 +64,8 @@ async function addComment(req, res) {
     }
 }
 
-module.exports = { getPostById, getComments, addComment };
+module.exports = {
+    getPostById,
+    getComments,
+    addComment,
+};
