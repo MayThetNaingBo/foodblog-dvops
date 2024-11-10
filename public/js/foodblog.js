@@ -151,7 +151,7 @@ function displayPosts(data) {
                             <small class="text-muted">Location: ${location} | Date: ${visitDate}</small>   
                         </div>
                     </div>
-                    <div class="mb-2">
+                    <div class="mb-2 ml-3">
                         <button class="btn btn-warning" onclick="editFeedback('${post.id}')">Update</button>
                         <button class="btn btn-danger" onclick="deleteFeedback('${post.id}')">Delete</button>
                     </div>
