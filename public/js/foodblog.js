@@ -6,7 +6,7 @@ function addFeedback() {
     const rating = document.getElementById("rating").value;
     const content = document.getElementById("content").value;
     const imageUrl =
-        document.getElementById("imageFile").value || "images/default.jpg";
+        document.getElementById("imageFile").value || "images/NoImage.jpg";
 
     const feedbackData = {
         restaurantName,
@@ -64,21 +64,18 @@ document.addEventListener("DOMContentLoaded", fetchFeedback);
 
 // Function which displays the feedback on the main page when successful
 function displayFeedback(feedback) {
-    const { restaurantName, location, visitDate, rating, content, imageUrl } =
-        feedback;
+    const { id, restaurantName, location, visitDate, rating, content, imageUrl } = feedback;
     const feedbackCard = document.createElement("div");
     feedbackCard.className = "col-md-4 mb-4";
 
     // Generate stars based on the rating
     let stars = "Rating: ";
     for (let i = 1; i <= 5; i++) {
-        stars += `<span style="color: ${
-            i <= rating ? "gold" : "gray"
-        };">&#9733;</span>`;
+        stars += `<span style="color: ${i <= rating ? "gold" : "gray"};">&#9733;</span>`;
     }
 
     feedbackCard.innerHTML = `
-        <div class="card h-100">
+        <div class="card h-100" onclick="window.location.href='post.html?id=${id}'">
             <img src="${imageUrl}" class="card-img-top" alt="${restaurantName}">
             <div class="card-body">
                 <h5 class="card-title">${restaurantName}</h5>
@@ -91,3 +88,6 @@ function displayFeedback(feedback) {
 
     document.getElementById("blog-posts-container").appendChild(feedbackCard);
 }
+
+// Fetch and display feedback posts on page load
+document.addEventListener("DOMContentLoaded", fetchFeedback);
