@@ -1,9 +1,10 @@
 const express = require("express");
 const path = require("path");
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 // Import functions from UpdateDeleteFeedbackUtil
+const PORT = 3000;
+
 const {
     updateFeedback,
     deleteFeedback,
@@ -12,6 +13,14 @@ const {
     readJSON,
     writeJSON,
 } = require("./utils/UpdateDeleteFeedbackUtil");
+
+const {
+    getPostById,
+    getComments,
+    addComment,
+    editComment,
+    deleteComment,
+} = require("./utils/UserComments");
 
 const dataFilePath = path.join(__dirname, "utils", "foodblogs.json");
 
@@ -22,20 +31,20 @@ app.use(express.static(path.join(__dirname, "public")));
 // Ensure the file exists and start the server
 async function startServer() {
     try {
-        await ensureFileExists(); // Ensure the feedback file is created if not present
+        await ensureFileExists();
         const server = app.listen(PORT, function () {
             const address = server.address();
             const baseUrl = `http://${
                 address.address === "::" ? "localhost" : address.address
             }:${address.port}`;
-            console.log(`Demo project at: ${baseUrl}`);
+            console.log(`Server started at: ${baseUrl}`);
         });
     } catch (error) {
         console.error("Error ensuring file exists:", error);
     }
 }
 
-// Serve the main HTML file
+// Route to serve the home page
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
@@ -66,7 +75,7 @@ app.get("/initial-data", async (req, res) => {
 app.post("/add-blogpost", async (req, res) => {
     try {
         const allPosts = await readJSON(dataFilePath);
-        const newFeedback = { id: Date.now().toString(), ...req.body }; // Assign a unique ID based on timestamp
+        const newFeedback = { id: Date.now().toString(), ...req.body };
         allPosts.push(newFeedback);
         await writeJSON(allPosts, dataFilePath);
         res.status(201).json({
@@ -110,7 +119,21 @@ app.delete("/delete-feedback/:id", async (req, res) => {
     }
 });
 
-// Start the server
+// Route to get a specific post by ID for detailed view
+app.get("/get-post/:id", getPostById);
+
+// Route to get comments for a specific post
+app.get("/get-comments/:id", getComments);
+
+// Route to add a comment to a specific post
+app.post("/add-comment/:id", addComment);
+
+// Route to edit a comment on a specific post
+app.put("/edit-comment/:id/:commentId", editComment);
+
+// Route to delete a comment from a specific post
+app.delete("/delete-comment/:id/:commentId", deleteComment);
+
 startServer();
 
 module.exports = { app };
