@@ -32,7 +32,7 @@ function addFeedback() {
             if (response.success) {
                 alert("Added Feedback for: " + restaurantName + "!");
                 document.getElementById("blogPostForm").reset();
-                fetchFeedback();
+                fetchFeedback(); // Refresh the posts list to show the new entry
             } else {
                 alert(response.message || "Unable to add feedback!");
             }
@@ -46,21 +46,57 @@ function addFeedback() {
         });
 }
 
-// Fetch the Feedback
+// Fetch and display all feedback posts
 function fetchFeedback() {
-    fetch("/initial-data")
+    fetch("/get-feedback")
         .then((response) => response.json())
         .then((data) => {
-            const feedbackContainer = document.getElementById(
-                "blog-posts-container"
-            );
-            feedbackContainer.innerHTML = "";
-            data.forEach((feedback) => displayFeedback(feedback));
+            displayPosts(data); // Use displayPosts to render all feedback
         })
-        .catch((error) => console.error("Error loading feedback:", error));
+        .catch((error) => console.error("Error fetching feedback:", error));
 }
 
-document.addEventListener("DOMContentLoaded", fetchFeedback);
+// Function which dynamically displays all feedback posts on the main page
+function displayPosts(data) {
+    const postsContainer = document.getElementById("blog-posts-container");
+    postsContainer.innerHTML = ""; // Clear any existing posts
+
+
+    data.forEach((post) => {
+        const postElement = document.createElement("div");
+        postElement.classList.add("col-md-4", "mb-3");
+        postElement.id = `post-${post.id}`; // Unique ID for deletion
+
+        const {
+            restaurantName,
+            location,
+            visitDate,
+            rating,
+            content,
+            imageUrl,
+        } = post;
+
+        // Generate stars based on the rating
+        let stars = "Rating: ";
+        for (let i = 1; i <= 5; i++) {
+            stars += `<span style="color: ${
+                i <= rating ? "gold" : "gray"
+            };">&#9733;</span>`;
+        }
+
+        postElement.innerHTML = `
+            <div class="card h-100">
+                <img src="${imageUrl}" class="card-img-top" alt="${restaurantName}">
+                <div class="card-body">
+                    <h5 class="card-title">${restaurantName}</h5>
+                    <p class="card-text">${content}</p>
+                    <div>${stars}</div>
+                    <small class="text-muted">Location: ${location} | Date: ${visitDate}</small>
+                    <div class="mt-3">
+                        <button class="btn btn-warning" onclick="editFeedback('${post.id}')">Update</button>
+                        <button class="btn btn-danger" onclick="deleteFeedback('${post.id}')">Delete</button>
+                    </div>
+                </div>
 
 // Function which displays the feedback on the main page when successful
 function displayFeedback(feedback) {
@@ -82,12 +118,58 @@ function displayFeedback(feedback) {
                 <p class="card-text">${content}</p>
                 <div>${stars}</div>
                 <small class="text-muted">Location: ${location} | Date: ${visitDate}</small>
-            </div>
-        </div>
-    `;
 
-    document.getElementById("blog-posts-container").appendChild(feedbackCard);
+            </div>
+        `;
+
+        postsContainer.appendChild(postElement);
+    });
 }
+
+
+// Function to delete feedback
+function deleteFeedback(id) {
+    const confirmDelete = confirm("Are you sure you want to delete this post?");
+    if (confirmDelete) {
+        fetch(`/delete-feedback/${id}`, {
+            method: "DELETE",
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.message === "Feedback deleted successfully!") {
+                    alert("Post deleted successfully!");
+                    const postElement = document.getElementById(`post-${id}`);
+                    if (postElement) {
+                        postElement.remove(); // Remove the element from the DOM
+                    }
+                } else {
+                    alert("Failed to delete the post!");
+                }
+            })
+            .catch((error) => console.error("Error deleting feedback:", error));
+    }
+}
+
+// Function to set feedback data in localStorage and navigate to update page
+function editFeedback(id) {
+    fetch(`/get-feedback/${id}`)
+        .then((response) => response.json())
+        .then((data) => {
+            if (data) {
+                localStorage.setItem("feedbackToUpdate", JSON.stringify(data));
+                window.location.href = "update.html"; // Navigate to update page
+            } else {
+                alert("Failed to load feedback data for editing.");
+            }
+        })
+        .catch((error) =>
+            console.error("Error fetching feedback data:", error)
+        );
+}
+
+// Call fetchFeedback when the page loads to display the posts initially
+document.addEventListener("DOMContentLoaded", fetchFeedback);
 
 // Fetch and display feedback posts on page load
 document.addEventListener("DOMContentLoaded", fetchFeedback);
+
