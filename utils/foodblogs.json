@@ -75,10 +75,19 @@
     "imageUrl": "https://i.pinimg.com/474x/ba/ca/d7/bacad722abf37dbad3c43a4017f42641.jpg"
   },
   {
-    "id": "1731265940345",
-    "restaurantName": "Name",
-    "location": "Singapore",
-    "visitDate": "2024-12-04",
+    "id": "1731273606102",
+    "restaurantName": "Bristo Lab ",
+    "location": "mmmmm",
+    "visitDate": "2024-11-15",
+    "rating": "2",
+    "content": "good good good good good",
+    "imageUrl": "images/NoImage.jpg"
+  },
+  {
+    "id": "1731274584208",
+    "restaurantName": "Bristo Lab ",
+    "location": "SIng",
+    "visitDate": "2024-10-28",
     "rating": "3",
     "content": "nice nice nice nice nice",
     "imageUrl": "images/NoImage.jpg"
