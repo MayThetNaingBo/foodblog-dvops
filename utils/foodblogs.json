@@ -1,6 +1,10 @@
 [
   {
+
     "restaurantName": "Hawkar Centre",
+
+    "restaurantName": "Hawker Center",
+
     "location": "Chinatown, Singapore",
     "visitDate": "2024-11-05",
     "rating": "6",
@@ -73,14 +77,5 @@
     "rating": "2",
     "content": "nice nice nice nice nice",
     "imageUrl": "https://i.pinimg.com/474x/ba/ca/d7/bacad722abf37dbad3c43a4017f42641.jpg"
-  },
-  {
-    "id": "1731265940345",
-    "restaurantName": "Name",
-    "location": "Singapore",
-    "visitDate": "2024-12-04",
-    "rating": "3",
-    "content": "nice nice nice nice nice",
-    "imageUrl": "images/NoImage.jpg"
   }
 ]

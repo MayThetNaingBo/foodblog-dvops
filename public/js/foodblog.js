@@ -56,6 +56,20 @@ function fetchFeedback() {
         .catch((error) => console.error("Error fetching feedback:", error));
 }
 
+// function fetchFeedback1() {
+//     fetch("/initial-data")
+//         .then((response) => response.json())
+//         .then((data) => {
+//             const feedbackContainer = document.getElementById(
+//                 "blog-posts-container"
+//             );
+//             feedbackContainer.innerHTML = "";
+//             data.forEach((feedback) => displayFeedback(feedback));
+//         })
+//         .catch((error) => console.error("Error loading feedback:", error));
+// }
+
+document.addEventListener("DOMContentLoaded", fetchFeedback);
 // Function which dynamically displays all feedback posts on the main page
 function displayPosts(data) {
     const postsContainer = document.getElementById("blog-posts-container");
@@ -82,20 +96,65 @@ function displayPosts(data) {
                 i <= rating ? "gold" : "gray"
             };">&#9733;</span>`;
         }
+        function displayFeedback(feedback) {
+            const {
+                id,
+                restaurantName,
+                location,
+                visitDate,
+                rating,
+                content,
+                imageUrl,
+            } = feedback;
+            const feedbackCard = document.createElement("div");
+            feedbackCard.className = "col-md-4 mb-4";
 
-        postElement.innerHTML = `
-            <div class="card h-100">
-                <img src="${imageUrl}" class="card-img-top" alt="${restaurantName}">
-                <div class="card-body">
-                    <h5 class="card-title">${restaurantName}</h5>
-                    <p class="card-text">${content}</p>
-                    <div>${stars}</div>
-                    <small class="text-muted">Location: ${location} | Date: ${visitDate}</small>
-                    <div class="mt-3">
+            // Generate stars based on the rating
+            let stars = "Rating: ";
+            for (let i = 1; i <= 5; i++) {
+                stars += `<span style="color: ${
+                    i <= rating ? "gold" : "gray"
+                };">&#9733;</span>`;
+            }
+
+            feedbackCard.innerHTML = `
+                <div class="card h-100">
+                    <div  onclick="window.location.href='post.html?id=${post.id}'">
+                        <img src="${imageUrl}" class="card-img-top" alt="${restaurantName}">
+                        <div class="card-body">
+                            <h5 class="card-title">${restaurantName}</h5>
+                            <p class="card-text">${content}</p>
+                            <div>${stars}</div>
+                            <small class="text-muted">Location: ${location} | Date: ${visitDate}</small>   
+                        </div>
+                    </div>
+                    <div class="mb-2">
                         <button class="btn btn-warning" onclick="editFeedback('${post.id}')">Update</button>
                         <button class="btn btn-danger" onclick="deleteFeedback('${post.id}')">Delete</button>
                     </div>
                 </div>
+    `;
+
+            document
+                .getElementById("blog-posts-container")
+                .appendChild(feedbackCard);
+        }
+
+        postElement.innerHTML = `
+             <div class="card h-100">
+                    <div  onclick="window.location.href='post.html?id=${post.id}'">
+                        <img src="${imageUrl}" class="card-img-top" alt="${restaurantName}">
+                        <div class="card-body">
+                            <h5 class="card-title">${restaurantName}</h5>
+                            <p class="card-text">${content}</p>
+                            <div>${stars}</div>
+                            <small class="text-muted">Location: ${location} | Date: ${visitDate}</small>   
+                        </div>
+                    </div>
+                    <div class="mb-2 ml-3">
+                        <button class="btn btn-warning" onclick="editFeedback('${post.id}')">Update</button>
+                        <button class="btn btn-danger" onclick="deleteFeedback('${post.id}')">Delete</button>
+                    </div>
             </div>
         `;
 
@@ -144,4 +203,41 @@ function editFeedback(id) {
 }
 
 // Call fetchFeedback when the page loads to display the posts initially
+document.addEventListener("DOMContentLoaded", fetchFeedback);
+
+function displayFeedback(feedback) {
+    const {
+        id,
+        restaurantName,
+        location,
+        visitDate,
+        rating,
+        content,
+        imageUrl,
+    } = feedback;
+    const feedbackCard = document.createElement("div");
+    feedbackCard.className = "col-md-4 mb-4";
+
+    // Generate stars based on the rating
+    let stars = "Rating: ";
+    for (let i = 1; i <= 5; i++) {
+        stars += `<span style="color: ${
+            i <= rating ? "gold" : "gray"
+        };">&#9733;</span>`;
+    }
+
+    feedbackCard.innerHTML = `
+        <div class="card h-100" onclick="window.location.href='post.html?id=${id}'">
+            <img src="${imageUrl}" class="card-img-top" alt="${restaurantName}">
+            <div class="card-body">
+                <h5 class="card-title">${restaurantName}</h5>
+                <p class="card-text">${content}</p>
+                <div>${stars}</div>
+                <small class="text-muted">Location: ${location} | Date: ${visitDate}</small>
+            </div>
+        </div>
+    `;
+
+    document.getElementById("blog-posts-container").appendChild(feedbackCard);
+}
 document.addEventListener("DOMContentLoaded", fetchFeedback);
