@@ -3,7 +3,7 @@ const path = require("path");
 const app = express();
 const PORT = 3000;
 
-// Import functions from UpdateDeleteFeedbackUtil
+// Import functions from utility files
 const {
     updateFeedback,
     deleteFeedback,
@@ -17,7 +17,11 @@ const {
     getPostById,
     getComments,
     addComment,
+    editComment,
+    deleteComment, // Added missing imports for edit and delete comments
 } = require("./utils/UserComments");
+
+const dataFilePath = path.join(__dirname, "utils", "foodblogs.json");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -58,9 +62,7 @@ app.get("/get-feedback", async (req, res) => {
 // Load initial data from JSON file
 app.get("/initial-data", async (req, res) => {
     try {
-        const initialData = await readJSON(
-            path.join(__dirname, "utils", "foodblogs.json")
-        );
+        const initialData = await readJSON(dataFilePath);
         res.json(initialData);
     } catch (error) {
         console.error("Error loading initial data:", error);
@@ -72,7 +74,7 @@ app.get("/initial-data", async (req, res) => {
 app.post("/add-blogpost", async (req, res) => {
     try {
         const allPosts = await readJSON(dataFilePath);
-        const newFeedback = { id: Date.now().toString(), ...req.body }; // Assign a unique ID based on timestamp
+        const newFeedback = { id: Date.now().toString(), ...req.body };
         allPosts.push(newFeedback);
         await writeJSON(allPosts, dataFilePath);
         res.status(201).json({
@@ -124,6 +126,12 @@ app.get("/get-comments/:id", getComments);
 
 // Route to add a comment to a specific post
 app.post("/add-comment/:id", addComment);
+
+// Route to edit a comment on a specific post
+app.put("/edit-comment/:id/:commentId", editComment);
+
+// Route to delete a comment from a specific post
+app.delete("/delete-comment/:id/:commentId", deleteComment);
 
 // Start the server
 startServer();
