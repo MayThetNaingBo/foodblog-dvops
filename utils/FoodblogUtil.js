@@ -3,6 +3,14 @@ const path = require("path");
 
 const dataFilePath = path.join(__dirname, "foodblogs.json");
 
+// Banned words list
+const bannedWords = ["awful", "kill", "terrible", "stupid"];
+function containsBannedWords(content) {
+    return bannedWords.some((word) =>
+        content.toLowerCase().includes(word.toLowerCase())
+    );
+}
+
 async function ensureFileExists() {
     try {
         await fs.access(dataFilePath);
@@ -42,26 +50,13 @@ async function addFeedback(req, res) {
         let { restaurantName, location, visitDate, rating, content, imageUrl } =
             req.body;
 
-        console.log("Received data:", req.body);
-
-        // Validation
-        if (!restaurantName)
-            return res
-                .status(400)
-                .send("Validation error: Restaurant name is required.");
-        if (!location)
-            return res
-                .status(400)
-                .send("Validation error: Location is required.");
-        if (!visitDate)
-            return res
-                .status(400)
-                .send("Validation error: Date of visit is required.");
-        if (!content || content.length < 6) {
+        // Check for inappropriate content
+        const isInappropriate = containsBannedWords(content);
+        if (isInappropriate) {
             return res
                 .status(400)
                 .send(
-                    "Validation error: Feedback content must be at least 6 characters."
+                    "Validation error: Feedback content contains inappropriate language."
                 );
         }
 
@@ -84,10 +79,8 @@ async function addFeedback(req, res) {
         };
 
         // Write the new blog post to the JSON file
-        const updatedBlogPosts = await writeJSON(newBlogPost, dataFilePath);
-
-        console.log("Feedback added successfully:", newBlogPost);
-        return res.status(201).json({ success: true, data: updatedBlogPosts });
+        const updatedFeedback = await writeJSON(newBlogPost, dataFilePath);
+        return res.status(201).json({ success: true, data: updatedFeedback });
     } catch (error) {
         console.error("Error adding feedback:", error);
         return res.status(500).send("Server error: Unable to add feedback.");
@@ -103,6 +96,7 @@ async function getFeedback(req, res) {
         res.status(500).json({ message: "Unable to fetch feedback data." });
     }
 }
+// Fetch a specific feedback post by ID
 
 module.exports = {
     ensureFileExists,

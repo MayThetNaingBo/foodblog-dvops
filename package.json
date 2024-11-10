@@ -1,5 +1,5 @@
 {
-  "name": "foodblog_dvops",
+  "name": "foodblog-dvops",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
