@@ -6,7 +6,9 @@ async function loadPostDetails(postId) {
 
         const post = await response.json();
         document.getElementById("post-title").textContent = post.restaurantName;
-        document.getElementById("post-location").textContent = `Location: ${post.location}`;
+        document.getElementById(
+            "post-location"
+        ).textContent = `Location: ${post.location}`;
         document.getElementById("post-content").textContent = post.content;
         document.getElementById("post-image").src = post.imageUrl;
 
@@ -26,7 +28,7 @@ async function loadComments(postId) {
         const commentsContainer = document.getElementById("comments-container");
         commentsContainer.innerHTML = "";
 
-        comments.forEach(comment => {
+        comments.forEach((comment) => {
             const commentDiv = document.createElement("div");
             commentDiv.classList.add("comment");
             commentDiv.textContent = comment.text;
@@ -48,7 +50,7 @@ async function addComment(postId) {
         const response = await fetch(`/add-comment/${postId}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: commentText })
+            body: JSON.stringify({ text: commentText }),
         });
 
         if (response.ok) {
@@ -67,7 +69,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const postId = new URLSearchParams(window.location.search).get("id");
     if (postId) {
         loadPostDetails(postId);
-        document.getElementById("add-comment-btn").addEventListener("click", () => addComment(postId));
+        document
+            .getElementById("add-comment-btn")
+            .addEventListener("click", () => addComment(postId));
     } else {
         console.error("No post ID found in URL");
     }
