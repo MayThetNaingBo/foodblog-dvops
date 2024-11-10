@@ -47,8 +47,7 @@ async function writeJSON(object, filename) {
 
 async function addFeedback(req, res) {
     try {
-        let { restaurantName, location, visitDate, rating, content, imageUrl } =
-            req.body;
+        let { restaurantName, location, visitDate, rating, content, imageUrl } = req.body;
 
         // Check for inappropriate content
         const isInappropriate = containsBannedWords(content);
@@ -56,35 +55,27 @@ async function addFeedback(req, res) {
             return res
                 .status(400)
                 .send(
-                    "Your post may contain inappropriate or offensive words in language."
+                    "Your post may contain inappropriate or offensive words."
                 );
         }
 
-<<<<<<< HEAD
         // Set a default image if imageUrl is not provided or invalid
         const urlPattern = /^(https?:\/\/)/i;
-        imageUrl =
-            imageUrl && urlPattern.test(imageUrl)
-                ? imageUrl
-                : "images/NoImage.jpg"; // Default image path
+        imageUrl = imageUrl && urlPattern.test(imageUrl) ? imageUrl : "images/NoImage.jpg"; // Default image path
 
         // Create a new blog post object
         const newBlogPost = {
-            id: Date.now().toString(), // Generating a unique ID
-=======
-        // Save feedback if successful
-        const feedbackData = {
             id: Date.now().toString(),
->>>>>>> 6a2e7d7df84258af01d7298924bc747269776a74
             restaurantName,
             location,
             visitDate,
             rating,
             content,
-            imageUrl: imageUrl || "images/NoImage.jpg",
+            imageUrl,
         };
 
-        const updatedFeedback = await writeJSON(feedbackData, dataFilePath);
+        // Write the new blog post to the JSON file
+        const updatedFeedback = await writeJSON(newBlogPost, dataFilePath);
         return res.status(201).json({ success: true, data: updatedFeedback });
     } catch (error) {
         console.error("Error adding feedback:", error);
