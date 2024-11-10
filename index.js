@@ -18,8 +18,6 @@ const {
     getPostById,
     getComments,
     addComment,
-    editComment,
-    deleteComment,
 } = require("./utils/UserComments");
 
 const dataFilePath = path.join(__dirname, "utils", "foodblogs.json");
@@ -128,11 +126,7 @@ app.get("/get-comments/:id", getComments);
 // Route to add a comment to a specific post
 app.post("/add-comment/:id", addComment);
 
-// Route to edit a comment on a specific post
-app.put("/edit-comment/:id/:commentId", editComment);
-
-// Route to delete a comment from a specific post
-app.delete("/delete-comment/:id/:commentId", deleteComment);
+// Route to edit a comment on a specific postn
 
 startServer();
 
