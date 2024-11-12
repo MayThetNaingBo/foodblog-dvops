@@ -56,19 +56,6 @@ function fetchFeedback() {
         .catch((error) => console.error("Error fetching feedback:", error));
 }
 
-// function fetchFeedback1() {
-//     fetch("/initial-data")
-//         .then((response) => response.json())
-//         .then((data) => {
-//             const feedbackContainer = document.getElementById(
-//                 "blog-posts-container"
-//             );
-//             feedbackContainer.innerHTML = "";
-//             data.forEach((feedback) => displayFeedback(feedback));
-//         })
-//         .catch((error) => console.error("Error loading feedback:", error));
-// }
-
 document.addEventListener("DOMContentLoaded", fetchFeedback);
 // Function which dynamically displays all feedback posts on the main page
 function displayPosts(data) {
