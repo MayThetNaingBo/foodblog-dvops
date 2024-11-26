@@ -52,6 +52,52 @@ async function updateFeedback(req, res) {
             imageUrl,
         } = req.body;
 
+        // Validation: Ensure all required fields are present
+        if (
+            !restaurantName ||
+            !location ||
+            !visitDate ||
+            !rating ||
+            !content ||
+            !imageUrl
+        ) {
+            return res
+                .status(400)
+                .json({ message: "All fields are required." });
+        }
+
+        // Validation: No special characters in restaurantName or location
+        const specialCharPattern = /[!@#$%^&*(),.?":{}|<>]/g;
+        if (specialCharPattern.test(restaurantName)) {
+            return res.status(400).json({
+                message:
+                    "Please fill a proper name of the restaurant. Special characters cannot be included in the name of the restaurant.",
+            });
+        }
+        if (specialCharPattern.test(location)) {
+            return res.status(400).json({
+                message:
+                    "Please fill a proper location. Special characters cannot be included in the location.",
+            });
+        }
+
+        // Validation: Ensure content is at least 5 words long
+        const wordCount = content.split(" ").filter(Boolean).length;
+        if (wordCount < 5) {
+            return res
+                .status(400)
+                .json({ message: "Feedback must be at least 5 words long." });
+        }
+
+        // Validation: Ensure imageUrl is valid
+        const imageUrlPattern = /\.(jpg|jpeg|png|gif)$/i; // Valid image extensions
+        if (!imageUrlPattern.test(imageUrl)) {
+            return res.status(400).json({
+                message:
+                    "Invalid image URL format. Must end with .jpg, .jpeg, .png, or .gif.",
+            });
+        }
+
         const allPosts = await readJSON(dataFilePath);
         const postIndex = allPosts.findIndex((post) => post.id === id);
 
