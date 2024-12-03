@@ -1,38 +1,109 @@
 {
   "1731077350668711": [
     {
-      "text": "good"
+      "id": "5fda3730-dead-4ce1-a444-e3b0ab1fb4d6",
+      "text": "It looks delicious!!",
+      "timestamp": "2024-12-02T08:32:01.991Z"
     },
     {
-      "text": "But when i went there the atmosphere was a little bit noisy."
+      "id": "4f5c13f5-d1a5-4dce-9df3-80b85b17ec3b",
+      "text": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789bgfdf",
+      "timestamp": "2024-12-02T09:58:41.818Z"
     },
     {
-      "id": "9c196ae0-cc55-4850-b699-41028a932949",
-      "text": "the food is so delicious."
-    }
-  ],
-  "1731247818551": [
+      "id": "e0757453-b69b-4f4a-860e-6c47ffcd8508",
+      "text": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+      "timestamp": "2024-12-02T09:59:29.204Z"
+    },
     {
-      "id": "368ee54e-d63d-4799-be31-928573e284cb",
-      "text": "The food is really nice"
-    }
-  ],
-  "1731274584208": [
+      "id": "522bd943-c40d-4ad9-af45-02e912567dd4",
+      "text": "When i went there, the food was not that good.",
+      "timestamp": "2024-12-03T11:28:51.495Z"
+    },
     {
-      "id": "27495563-9601-42fb-a04e-bb110dc83730",
-      "text": "Good"
-    }
-  ],
-  "1731273606102": [
+      "id": "7e111e10-698a-4a4c-acb0-14d4913c7daa",
+      "text": "This is a valid comment.",
+      "timestamp": "2024-12-03T12:11:16.781Z"
+    },
     {
-      "id": "860a3f5a-2e5f-4d3c-aca2-ec38c982b2ce",
-      "text": "the service is also good"
-    }
-  ],
-  "1731264673358": [
+      "id": "90418e1f-e380-4a6a-a189-2437da9ab24f",
+      "text": "This is a valid comment.",
+      "timestamp": "2024-12-03T17:10:18.727Z"
+    },
     {
-      "id": "107c22f6-651d-4c09-ae0c-ad4bca214e32",
-      "text": "Recommended"
+      "id": "2b3e81c2-6e6d-4542-be35-4dfbbd89e3a0",
+      "text": "This is a valid comment.",
+      "timestamp": "2024-12-03T17:28:17.648Z"
+    },
+    {
+      "id": "45400ba2-4613-465f-8018-5c4919ba482c",
+      "text": "This comment contains bannedWord.",
+      "timestamp": "2024-12-03T17:28:17.668Z"
+    },
+    {
+      "id": "35127744-365e-4c7b-b8b1-9237b48449d8",
+      "text": "This is a valid comment.",
+      "timestamp": "2024-12-03T17:38:32.194Z"
+    },
+    {
+      "id": "ed1bb809-dc83-47a1-a550-11189572933f",
+      "text": "This comment contains bannedWord.",
+      "timestamp": "2024-12-03T17:38:32.208Z"
+    },
+    {
+      "id": "035fb376-c03f-49b2-94f3-d50dea2151cf",
+      "text": "This is a valid comment.",
+      "timestamp": "2024-12-03T17:42:09.093Z"
+    },
+    {
+      "id": "db05e6ab-8b82-478c-839c-dae07e02dee1",
+      "text": "This comment contains bannedWord.",
+      "timestamp": "2024-12-03T17:42:09.111Z"
+    },
+    {
+      "id": "00cdd831-a8b1-42a8-83b6-b1dfa6ab953c",
+      "text": "This is a valid comment.",
+      "timestamp": "2024-12-03T17:43:32.959Z"
+    },
+    {
+      "id": "3daee698-e2d6-4841-91f3-cc8f3c42df11",
+      "text": "Banned word detected in comment:",
+      "timestamp": "2024-12-03T17:43:32.979Z"
+    },
+    {
+      "id": "762ad24c-d07d-4b92-8734-964afac9faf3",
+      "text": "This is a valid comment.",
+      "timestamp": "2024-12-03T17:46:09.054Z"
+    },
+    {
+      "id": "25bdc086-446b-48ed-8efa-6fcf38fdd295",
+      "text": "Banned word detected in comment:",
+      "timestamp": "2024-12-03T17:46:09.088Z"
+    },
+    {
+      "id": "eb933fdc-6f98-4f58-871e-a38bf5459339",
+      "text": "This is a valid comment.",
+      "timestamp": "2024-12-03T17:47:49.713Z"
+    },
+    {
+      "id": "4e526323-0fee-46f7-a262-45ab5a1a69f5",
+      "text": "No banned words loaded.",
+      "timestamp": "2024-12-03T17:47:49.737Z"
+    },
+    {
+      "id": "811beb87-cb31-40cb-b786-9d67e02f6cbb",
+      "text": "This is a valid comment.",
+      "timestamp": "2024-12-03T17:53:06.664Z"
+    },
+    {
+      "id": "fee6abd0-d19e-4b55-947f-c7e174d711f6",
+      "text": "No banned words loaded.",
+      "timestamp": "2024-12-03T17:53:06.689Z"
+    },
+    {
+      "id": "ad63abb6-cdfd-4972-a62e-b79bc65f56da",
+      "text": "This is a valid comment.",
+      "timestamp": "2024-12-03T17:53:29.589Z"
     }
   ]
 }
