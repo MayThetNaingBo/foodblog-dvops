@@ -9,7 +9,7 @@
             rel="stylesheet"
         />
         <link rel="stylesheet" href="css/styles.css" />
-        <script src="js/addpost.js" defer></script>
+        <script src="js/foodblog.js" defer></script>
     </head>
     <body>
         <div class="center-container">
@@ -108,6 +108,10 @@
                             id="content"
                             placeholder="Enter Feedback"
                         ></textarea>
+                        <small id="content-char-count"
+                            >0 characters | 0 words</small
+                        >
+                        <!-- Character and word count display -->
                     </div>
                     <div class="form-group">
                         <label for="imageUrl">Image URL</label>
@@ -136,6 +140,13 @@
                     </div>
                     <div id="message" class="mt-3 text-center"></div>
                 </form>
+            </div>
+            <div id="info-message">
+                <span id="notification-message"></span>
+                <div id="confirmation-buttons" style="display: none">
+                    <button id="confirm-btn" class="btn">Yes</button>
+                    <button id="cancel-btn" class="btn">No</button>
+                </div>
             </div>
         </div>
     </body>
