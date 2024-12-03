@@ -1,1 +1,9 @@
-[]
+{
+  "user123": {
+    "restaurantName": "TP",
+    "location": "",
+    "visitDate": "",
+    "content": "",
+    "imageUrl": "images/NoImage.jpg"
+  }
+}

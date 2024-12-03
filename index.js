@@ -1,193 +1,109 @@
 const express = require("express");
 const path = require("path");
-const fs = require("fs");
 const rateLimit = require("express-rate-limit");
+
+// Import utilities from FoodblogUtil and UpdateDeleteFeedbackUtil
+const {
+    ensureFileExists,
+    autosaveDraft,
+    fetchDraft,
+    saveDraftToFile, // Included saveDraftToFile
+    getDraftFromFile, // Included getDraftFromFile
+    addFeedback,
+} = require("../foodblog-dvops/utils/FoodblogUtil");
+
+const {
+    getFeedback,
+    getFeedbackById,
+    updateFeedback,
+    deleteFeedback,
+} = require("../foodblog-dvops/utils/UpdateDeleteFeedbackUtil");
+
 const app = express();
 const PORT = 3000;
 
-// File path for storing drafts
-const draftsFilePath = path.join(__dirname, "drafts.json");
-
-// Ensure the drafts file exists
-if (!fs.existsSync(draftsFilePath)) {
-    fs.writeFileSync(draftsFilePath, JSON.stringify({}));
-}
-
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
-// Utility function to save draft to file
-function saveDraftToFile(userId, draftData) {
-    const drafts = JSON.parse(fs.readFileSync(draftsFilePath));
-    drafts[userId] = draftData;
-    fs.writeFileSync(draftsFilePath, JSON.stringify(drafts));
-}
+// File paths
+const draftsFilePath = path.join(__dirname, "utils", "drafts.json");
+const dataFilePath = path.join(__dirname, "utils", "foodblogs.json");
 
-// Utility function to get a draft from the file
-function getDraftFromFile(userId) {
-    const drafts = JSON.parse(fs.readFileSync(draftsFilePath));
-    return drafts[userId];
-}
-
-// Autosave draft API
-app.post("/autosave-draft", (req, res) => {
-    const { userId, restaurantName, location, visitDate, content, imageUrl } =
-        req.body;
-
-    const draftData = {
-        restaurantName,
-        location,
-        visitDate,
-        content,
-        imageUrl,
-        lastSaved: new Date(),
-    };
-
-    saveDraftToFile(userId, draftData);
-    res.status(200).json({
-        success: true,
-        message: "Draft autosaved successfully.",
-    });
-});
-
-app.get("/get-draft/:userId", (req, res) => {
-    const { userId } = req.params;
-    const draft = getDraftFromFile(userId);
-
-    if (draft) {
-        res.status(200).json({ success: true, draft });
-    } else {
-        res.status(404).json({ success: false, message: "No draft found." });
-    }
-});
-
-// Rate Limiting (Using express-rate-limit)
+// Rate Limiting for adding blog posts
 const addPostRateLimiter = rateLimit({
-    windowMs: 5 * 60 * 1000, // 5 minutes window
-    max: 3, // Limit each user to 5 requests per 5 minutes
+    windowMs: 3 * 60 * 1000, // 3 minutes window
+    max: 3, // Limit each user to 3 requests per 3 minutes
     message: {
         success: false,
         message:
-            "You cannot post not more than 3 blogs continuoulsy. Please wait a while before adding more posts.",
+            "You have exceeded the maximum limit of 3 posts within 3 minutes. Please wait before posting again.",
     },
 });
 
-// Path to your feedback JSON file
-const dataFilePath = path.join(__dirname, "utils", "foodblogs.json");
+// Routes
 
-// Ensure the feedback file exists
-async function ensureFileExists() {
-    if (!fs.existsSync(dataFilePath)) {
-        fs.writeFileSync(dataFilePath, JSON.stringify([]));
-    }
-}
+// Draft Management Routes
+app.post("/autosave-draft", autosaveDraft); // Autosave a draft
+app.get("/get-draft/:userId", fetchDraft); // Fetch a saved draft by userId
 
-// Load initial data from JSON file
-app.get("/initial-data", async (req, res) => {
+// API to manually save a draft to file
+app.post("/save-draft", async (req, res) => {
     try {
-        const initialData = JSON.parse(fs.readFileSync(dataFilePath));
-        res.json(initialData);
-    } catch (error) {
-        console.error("Error loading initial data:", error);
-        res.status(500).json({ message: "Error loading initial data." });
-    }
-});
-
-// Add new feedback entry with rate limiting
-app.post("/add-blogpost", addPostRateLimiter, async (req, res) => {
-    try {
-        const allPosts = JSON.parse(fs.readFileSync(dataFilePath));
-        const newFeedback = { id: Date.now().toString(), ...req.body };
-        allPosts.push(newFeedback);
-        fs.writeFileSync(dataFilePath, JSON.stringify(allPosts));
-        res.status(201).json({
-            success: true,
-            message: "Feedback added successfully!",
-            newFeedback,
-        });
-    } catch (error) {
-        console.error("Error adding feedback:", error);
-        res.status(500).json({ message: "Error adding feedback." });
-    }
-});
-
-// Get all feedback entries
-app.get("/get-feedback", async (req, res) => {
-    try {
-        const allPosts = JSON.parse(fs.readFileSync(dataFilePath));
-        res.json(allPosts);
-    } catch (error) {
-        console.error("Error fetching feedback:", error);
-        res.status(500).json({ message: "Error fetching feedback." });
-    }
-});
-
-// Get specific feedback by ID
-app.get("/get-feedback/:id", async (req, res) => {
-    try {
-        const allPosts = JSON.parse(fs.readFileSync(dataFilePath));
-        const feedback = allPosts.find((post) => post.id === req.params.id);
-        if (feedback) {
-            res.status(200).json(feedback);
-        } else {
-            res.status(404).json({ message: "Feedback not found." });
-        }
-    } catch (error) {
-        console.error("Error fetching feedback by ID:", error);
-        res.status(500).json({ message: "Error fetching feedback by ID." });
-    }
-});
-
-// Update an existing feedback entry by ID
-app.put("/edit-feedback/:id", async (req, res) => {
-    try {
-        const allPosts = JSON.parse(fs.readFileSync(dataFilePath));
-        const index = allPosts.findIndex((post) => post.id === req.params.id);
-        if (index !== -1) {
-            allPosts[index] = { ...allPosts[index], ...req.body };
-            fs.writeFileSync(dataFilePath, JSON.stringify(allPosts));
-            res.status(200).json({
-                success: true,
-                message: "Feedback updated successfully!",
-            });
-        } else {
-            res.status(404).json({ message: "Feedback not found." });
-        }
-    } catch (error) {
-        console.error("Error updating feedback:", error);
-        res.status(500).json({ message: "Error updating feedback." });
-    }
-});
-
-// Delete a feedback entry by ID
-app.delete("/delete-feedback/:id", async (req, res) => {
-    try {
-        const allPosts = JSON.parse(fs.readFileSync(dataFilePath));
-        const filteredPosts = allPosts.filter(
-            (post) => post.id !== req.params.id
-        );
-        fs.writeFileSync(dataFilePath, JSON.stringify(filteredPosts));
+        const { userId, draftData } = req.body;
+        await saveDraftToFile(userId, draftData);
         res.status(200).json({
             success: true,
-            message: "Feedback deleted successfully!",
+            message: "Draft saved successfully.",
         });
     } catch (error) {
-        console.error("Error deleting feedback:", error);
-        res.status(500).json({ message: "Error deleting feedback." });
+        console.error("Error saving draft to file:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error saving draft.",
+        });
     }
 });
 
-// Start the server
-async function startServer() {
+// API to fetch a draft manually from file
+app.get("/fetch-draft/:userId", async (req, res) => {
     try {
-        await ensureFileExists();
-        app.listen(PORT, () => {
-            console.log(`Server is running on http://localhost:${PORT}`);
-        });
+        const userId = req.params.userId;
+        const draft = await getDraftFromFile(userId);
+        if (draft) {
+            res.status(200).json({ success: true, draft });
+        } else {
+            res.status(404).json({
+                success: false,
+                message: "No draft found.",
+            });
+        }
     } catch (error) {
-        console.error("Error ensuring file exists:", error);
+        console.error("Error fetching draft from file:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error fetching draft.",
+        });
     }
-}
+});
 
-startServer();
+// Feedback Management Routes
+// Feedback Management Routes
+app.post("/add-blogpost", addPostRateLimiter, addFeedback); // Add new feedback
+app.get("/get-feedback", getFeedback); // Get all feedback
+app.get("/get-feedback/:id", getFeedbackById); // Get feedback by ID
+app.put("/edit-feedback/:id", updateFeedback); // Edit feedback by ID
+app.delete("/delete-feedback/:id", deleteFeedback); // Delete feedback by ID
+
+// Server Initialization
+(async () => {
+    // Ensure required files exist before starting the server
+    await ensureFileExists(draftsFilePath, "{}");
+    await ensureFileExists(dataFilePath);
+
+    // Start the server
+    app.listen(PORT, () => {
+        console.log(`Server is running on http://localhost:${PORT}`);
+    });
+})();

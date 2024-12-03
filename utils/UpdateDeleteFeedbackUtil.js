@@ -1,27 +1,48 @@
 const fs = require("fs").promises;
 const path = require("path");
+
 const dataFilePath = path.join(__dirname, "foodblogs.json");
 
-async function ensureFileExists() {
+// Utility functions
+async function ensureFileExists(filePath) {
     try {
-        await fs.access(dataFilePath);
+        await fs.access(filePath);
     } catch (error) {
-        await fs.writeFile(dataFilePath, JSON.stringify([]), "utf8");
+        await fs.writeFile(filePath, JSON.stringify([]), "utf8");
     }
 }
 
-// Read JSON data
-async function readJSON(filename) {
-    const data = await fs.readFile(filename, "utf8");
-    return JSON.parse(data);
+async function readJSON(filePath) {
+    try {
+        const data = await fs.readFile(filePath, "utf8");
+        return JSON.parse(data);
+    } catch (error) {
+        console.error("Error reading JSON file:", error);
+        throw error;
+    }
 }
 
-// Write JSON data
-async function writeJSON(data, filename) {
-    await fs.writeFile(filename, JSON.stringify(data, null, 2), "utf8");
+async function writeJSON(data, filePath) {
+    try {
+        await fs.writeFile(filePath, JSON.stringify(data, null, 2), "utf8");
+    } catch (error) {
+        console.error("Error writing to JSON file:", error);
+        throw error;
+    }
 }
 
-// Fetch a specific feedback post by ID
+// Get all feedback
+async function getFeedback(req, res) {
+    try {
+        const feedbackData = await readJSON(dataFilePath);
+        res.status(200).json(feedbackData);
+    } catch (error) {
+        console.error("Error fetching feedback data:", error);
+        res.status(500).json({ message: "Unable to fetch feedback data." });
+    }
+}
+
+// Get feedback by ID
 async function getFeedbackById(req, res) {
     try {
         const { id } = req.params;
@@ -52,7 +73,6 @@ async function updateFeedback(req, res) {
             imageUrl,
         } = req.body;
 
-        // Validation: Ensure all required fields are present
         if (
             !restaurantName ||
             !location ||
@@ -66,22 +86,20 @@ async function updateFeedback(req, res) {
                 .json({ message: "All fields are required." });
         }
 
-        // Validation: No special characters in restaurantName or location
         const specialCharPattern = /[!@#$%^&*(),.?":{}|<>]/g;
         if (specialCharPattern.test(restaurantName)) {
             return res.status(400).json({
                 message:
-                    "Please fill a proper name of the restaurant. Special characters cannot be included in the name of the restaurant.",
+                    "Special characters cannot be included in the restaurant name.",
             });
         }
         if (specialCharPattern.test(location)) {
             return res.status(400).json({
                 message:
-                    "Please fill a proper location. Special characters cannot be included in the location.",
+                    "Special characters cannot be included in the location.",
             });
         }
 
-        // Validation: Ensure content is at least 5 words long
         const wordCount = content.split(" ").filter(Boolean).length;
         if (wordCount < 5) {
             return res
@@ -89,8 +107,7 @@ async function updateFeedback(req, res) {
                 .json({ message: "Feedback must be at least 5 words long." });
         }
 
-        // Validation: Ensure imageUrl is valid
-        const imageUrlPattern = /\.(jpg|jpeg|png|gif)$/i; // Valid image extensions
+        const imageUrlPattern = /\.(jpg|jpeg|png|gif)$/i;
         if (!imageUrlPattern.test(imageUrl)) {
             return res.status(400).json({
                 message:
@@ -149,7 +166,8 @@ module.exports = {
     updateFeedback,
     deleteFeedback,
     getFeedbackById,
+    getFeedback,
     ensureFileExists,
-    readJSON, // Ensure readJSON is exported
-    writeJSON, // Ensure writeJSON is exported
+    readJSON,
+    writeJSON,
 };

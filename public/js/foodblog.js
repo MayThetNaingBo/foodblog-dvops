@@ -13,14 +13,14 @@ function updateCharacterCount(fieldId, counterId, maxLength) {
         if (currentLength > maxLength) {
             counter.style.color = "red";
         } else {
-            counter.style.color = "#888"; // Change colour to default color
+            counter.style.color = "#888"; // default color
         }
     });
 }
 
-// Initialize character count for content field with a maximum length of 300 characters
+// Initialize character count for content field with a maximum length of 500 characters
 document.addEventListener("DOMContentLoaded", () => {
-    updateCharacterCount("content", "content-char-count", 300);
+    updateCharacterCount("content", "content-char-count", 500); // Field ID, counter ID, max length
 });
 
 function startAutosave(userId) {
@@ -53,7 +53,8 @@ function startAutosave(userId) {
 }
 
 function recoverDraft() {
-    const userId = "may@user"; // Hardcoding for saving draft function
+    const userId = "user123"; // Replace with your method to fetch userId
+
     fetch(`/get-draft/${userId}`)
         .then((response) => response.json())
         .then((data) => {
@@ -102,7 +103,7 @@ function recoverDraft() {
 
 document.addEventListener("DOMContentLoaded", () => {
     recoverDraft();
-    const userId = "may@user"; // Replace with dynamic userId retrieval
+    const userId = "user123"; // Replace with dynamic userId retrieval
     if (!autosaveInterval) startAutosave(userId);
 });
 function submitPost() {
@@ -157,7 +158,7 @@ function submitPost() {
 
     // Show confirmation notification
     showNotification(
-        "Are you sure you want to post this blog?",
+        "Are you sure you want to post this feedback?",
         "info",
         2000, // Duration for showing the message
         (isConfirmed) => {
@@ -204,6 +205,8 @@ function cancelPost() {
     window.location.href = "index.html";
 }
 
+/* Contents of foodblog.js */
+// Add feedback function
 function addFeedback() {
     const restaurantName = document.getElementById("restaurantName").value;
     const location = document.getElementById("location").value;
