@@ -33,4 +33,4 @@ jobs:
 
       # Step 5: Run backend tests located in the "tests" folder
       - name: Run backend tests
-        run: npm backend-test
+        run: npm run backend-test
