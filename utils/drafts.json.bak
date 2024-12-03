@@ -1,0 +1,12 @@
+{
+  "user1": {
+    "restaurantName": "Test Restaurant",
+    "location": "Test Location",
+    "visitDate": "2024-12-01",
+    "content": "Draft content",
+    "imageUrl": "https://example.com/image.jpg"
+  },
+  "undefined": {
+    "restaurantName": "Test Restaurant"
+  }
+}

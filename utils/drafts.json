@@ -1,9 +1,5 @@
 {
-  "user123": {
-    "restaurantName": "TP",
-    "location": "",
-    "visitDate": "",
-    "content": "",
-    "imageUrl": "images/NoImage.jpg"
+  "user1": {
+    "content": "Test Content"
   }
 }
