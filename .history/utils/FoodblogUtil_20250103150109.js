@@ -8,12 +8,9 @@ const dataFilePath = path.join(__dirname, "foodblogs.json");
 const bannedWords = ["awful", "kill", "terrible", "stupid"];
 
 function containsBannedWords(content) {
-    console.log(
-        "banned" +
-            bannedWords.some((word) =>
-                content.toLowerCase().includes(word.toLowerCase())
-            )
-    );
+    console.log(bannedWords.some((word) =>
+        content.toLowerCase().includes(word.toLowerCase())
+    );)
     return bannedWords.some((word) =>
         content.toLowerCase().includes(word.toLowerCase())
     );
